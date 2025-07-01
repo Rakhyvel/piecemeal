@@ -30,7 +30,12 @@ def logout_view(request):
 @login_required
 def home(request):
     item_count = request.user.food_items.count()
-    return render(request, "piecemeal_app/home.html", {"item_count": item_count})
+    ingredients = request.user.food_items.all()
+    return render(
+        request,
+        "piecemeal_app/home.html",
+        {"item_count": item_count, "ingredients": ingredients},
+    )
 
 
 @login_required
@@ -49,6 +54,7 @@ def create_ingredient_ajax(request):
             ingredient = form.save(commit=False)
             ingredient.owner = request.user
             ingredient.save()
+            ingredients = request.user.food_items.all()
             return JsonResponse(
                 {
                     "success": True,
@@ -57,7 +63,8 @@ def create_ingredient_ajax(request):
                         "id": ingredient.id,
                         "calories": ingredient.calories,
                     },
-                }
+                    "item_count": ingredients.count(),
+                },
             )
         else:
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
