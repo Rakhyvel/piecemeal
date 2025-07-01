@@ -1,10 +1,76 @@
-<h1>Hello, {{ user.username }}</h1>
-<p>Your counter: {{ counter.count }}</p>
-<form method="post" action="{% url 'increment' %}">
-    {% csrf_token %}
-    <button type="submit">Increment</button>
-</form>
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Piecemeal</title>
+</head>
+
+<body>
+    <h1>Hello, {{ user.username }}</h1>
+    <p>You have created {{ item_count }} food items.</p>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    <button id="add-ingredient-btn" class="btn btn-primary">
+        + Add Ingredient
+    </button>
+
+    <!-- Modal container -->
+    <div class="modal fade" id="ingredientModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ingredientModalContent">
+                <!-- The form HTML will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <ul id="ingredient-list">
+        {% for ingredient in ingredients %}
+        <li>{{ ingredient.name }} – {{ ingredient.calories }} kcal</li>
+        {% endfor %}
+    </ul>
+    <!-- JavaScript includes and inline script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Load the form into the modal when the button is clicked
+        $("#add-ingredient-btn").click(function () {
+            $.ajax({
+                url: "{% url 'create_ingredient_ajax' %}",
+                type: "GET",
+                success: function (data) {
+                    $("#ingredientModalContent").html(data);
+                    $("#ingredientModal").modal("show");
+                }
+            });
+        });
+
+        // Handle form submission via AJAX
+        $(document).on("submit", "#ingredientForm", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        $("#ingredient-list").append(
+                            "<li>" + response.ingredient.name + " – " + response.ingredient.calories + " kcal</li>"
+                        );
+                        $("#ingredientModal").modal("hide");
+                    }
+                },
+                error: function (xhr) {
+                    // Re-render the form with error messages
+                    $("#ingredientModalContent").html(xhr.responseText);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

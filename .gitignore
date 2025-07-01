@@ -48,6 +48,3 @@ dmypy.json
 # Mac and system files
 .DS_Store
 Thumbs.db
-
-# sqlite3
-*.sqlite3
