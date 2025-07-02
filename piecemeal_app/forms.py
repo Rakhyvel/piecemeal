@@ -1,8 +1,8 @@
 from django import forms
-from .models import IngredientModel
+from .models import FoodItem
 
 
-class IngredientForm(forms.ModelForm):
+class FoodItemForm(forms.ModelForm):
     class Meta:
-        model = IngredientModel
-        fields = ["name", "calories", "protein", "carbs", "fats"]
+        model = FoodItem
+        fields = ["name", "calories", "protein", "carbs", "fats", "is_meal"]

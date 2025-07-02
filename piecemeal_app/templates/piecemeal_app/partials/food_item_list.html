@@ -1,0 +1,12 @@
+<ul id="food-item-list">
+    {% for food_item in food_items %}
+    <li>
+        {% if food_item.is_meal %}🍽️{% else %}🥕{% endif %}
+        {{ food_item.name }} – {{ food_item.calories }} kcal
+        <form method="post" action="{% url 'delete_food_item' food_item.pk %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="color: red;">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>

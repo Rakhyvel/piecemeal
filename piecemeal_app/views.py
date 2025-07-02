@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
-from .forms import IngredientForm
+from django.template.loader import render_to_string
+from .forms import FoodItemForm
+from .models import FoodItem
 
 # from .models import UserCounter
 
@@ -30,11 +32,11 @@ def logout_view(request):
 @login_required
 def home(request):
     item_count = request.user.food_items.count()
-    ingredients = request.user.food_items.all()
+    food_items = request.user.food_items.all()
     return render(
         request,
         "piecemeal_app/home.html",
-        {"item_count": item_count, "ingredients": ingredients},
+        {"item_count": item_count, "food_items": food_items},
     )
 
 
@@ -47,29 +49,36 @@ def increment_counter(request):
     return redirect("home")
 
 
-def create_ingredient_ajax(request):
+def create_food_item_ajax(request):
     if request.method == "POST":
-        form = IngredientForm(request.POST)
+        form = FoodItemForm(request.POST)
         if form.is_valid():
-            ingredient = form.save(commit=False)
-            ingredient.owner = request.user
-            ingredient.save()
-            ingredients = request.user.food_items.all()
+            food_item = form.save(commit=False)
+            food_item.owner = request.user
+            food_item.save()
+            food_items = request.user.food_items.all()
+            html_list = render_to_string(
+                "piecemeal_app/partials/food_item_list.html",
+                {"food_items": FoodItem.objects.filter(owner=request.user)},
+            )
             return JsonResponse(
                 {
                     "success": True,
-                    "ingredient": {
-                        "name": ingredient.name,
-                        "id": ingredient.id,
-                        "calories": ingredient.calories,
-                    },
-                    "item_count": ingredients.count(),
+                    "html_list": html_list,
+                    "item_count": food_items.count(),
                 },
             )
         else:
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
     else:
-        form = IngredientForm()
+        form = FoodItemForm()
         return render(
-            request, "piecemeal_app/partials/ingredient_form.html", {"form": form}
+            request, "piecemeal_app/partials/food_item_form.html", {"form": form}
         )
+
+
+@require_POST
+def delete_food_item(request, pk):
+    food_item = get_object_or_404(FoodItem, pk=pk, owner=request.user)
+    food_item.delete()
+    return redirect("home")

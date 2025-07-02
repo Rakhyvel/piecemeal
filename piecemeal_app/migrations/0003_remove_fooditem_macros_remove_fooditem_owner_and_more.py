@@ -8,46 +8,61 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('piecemeal_app', '0002_macroprofile_fooditem_mealentry_delete_usercounter'),
+        ("piecemeal_app", "0002_macroprofile_fooditem_mealentry_delete_usercounter"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='fooditem',
-            name='macros',
+            model_name="fooditem",
+            name="macros",
         ),
         migrations.RemoveField(
-            model_name='fooditem',
-            name='owner',
+            model_name="fooditem",
+            name="owner",
         ),
         migrations.RemoveField(
-            model_name='mealentry',
-            name='item',
+            model_name="mealentry",
+            name="item",
         ),
         migrations.RemoveField(
-            model_name='mealentry',
-            name='meal',
+            model_name="mealentry",
+            name="meal",
         ),
         migrations.CreateModel(
-            name='IngredientModel',
+            name="IngredientModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('calories', models.FloatField(default=0)),
-                ('protein', models.FloatField(default=0)),
-                ('carbs', models.FloatField(default=0)),
-                ('fats', models.FloatField(default=0)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='food_items', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("calories", models.FloatField(default=0)),
+                ("protein", models.FloatField(default=0)),
+                ("carbs", models.FloatField(default=0)),
+                ("fats", models.FloatField(default=0)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="food_items",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='MacroProfile',
+            name="MacroProfile",
         ),
         migrations.DeleteModel(
-            name='FoodItem',
+            name="FoodItem",
         ),
         migrations.DeleteModel(
-            name='MealEntry',
+            name="MealEntry",
         ),
     ]
