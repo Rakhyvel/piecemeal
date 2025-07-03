@@ -2,11 +2,10 @@
     {% for food_item in food_items %}
     <li>
         {% if food_item.is_meal %}🍽️{% else %}🥕{% endif %}
-        {{ food_item.name }} – {{ food_item.calories }} kcal
-        <form method="post" action="{% url 'delete_food_item' food_item.pk %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" style="color: red;">Delete</button>
-        </form>
+        {% with macros=food_item.total_macros %}
+        {{ food_item.name }} – {{ macros.calories }} kcal
+        {% endwith %}
+        <button class="delete-button" data-id="{{ food_item.pk }}" style="color: red;">Delete</button>
     </li>
     {% endfor %}
 </ul>

@@ -1,0 +1,6 @@
+<form method="post" id="ingredientForm" action="{% url 'create_ingredient_ajax' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Ingredient</button>
+    <button type="button" data-dismiss="modal">Cancel</button>
+</form>

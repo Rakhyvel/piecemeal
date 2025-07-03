@@ -1,0 +1,6 @@
+<form method="post" id="mealForm" action="{% url 'create_meal_ajax' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Meal</button>
+    <button type="button" data-dismiss="modal">Cancel</button>
+</form>

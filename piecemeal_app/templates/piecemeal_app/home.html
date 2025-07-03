@@ -14,8 +14,10 @@
         <button type="submit">Logout</button>
     </form>
 
-    <button id="add-food-item-btn" class="btn btn-primary">
-        + Add Food Item
+    <button id="add-ingredient-btn" class="btn btn-primary">
+        + Add Ingredient
+    </button><button id="add-meal-btn" class="btn btn-secondary">
+        + Add Meal
     </button>
 
     <!-- Modal container -->
@@ -33,10 +35,58 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Load the form into the modal when the button is clicked
-        $("#add-food-item-btn").click(function () {
+        // Get CSRF token from the cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Handle delete click
+        $(document).on("click", ".delete-button", function () {
+            const button = $(this);
+            const itemId = button.data("id");
+
+            console.log(itemId);
             $.ajax({
-                url: "{% url 'create_food_item_ajax' %}",
+                url: "/food_item/delete/" + itemId + "/",  // adjust to your URL pattern
+                type: "POST",
+                headers: { "X-CSRFToken": csrftoken },
+                success: function (response) {
+                    // Remove the <li>
+                    $("p#item-count").text("You have created " + response.item_count + " food items.");
+                    button.closest("li").remove();
+                },
+                error: function () {
+                    alert("Error deleting item.");
+                }
+            });
+        });
+
+        // Load modals when buttons are clicked
+        $("#add-ingredient-btn").click(function () {
+            $.ajax({
+                url: "{% url 'create_ingredient_ajax' %}",
+                type: "GET",
+                success: function (data) {
+                    $("#foodItemModalContent").html(data);
+                    $("#foodItemModal").modal("show");
+                }
+            });
+        });
+        $("#add-meal-btn").click(function () {
+            $.ajax({
+                url: "{% url 'create_meal_ajax' %}",
                 type: "GET",
                 success: function (data) {
                     $("#foodItemModalContent").html(data);
@@ -45,8 +95,29 @@
             });
         });
 
-        // Handle form submission via AJAX
-        $(document).on("submit", "#foodItemForm", function (e) {
+        // Handle form submissions
+        $(document).on("submit", "#ingredientForm", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        $("#food-item-list").replaceWith(response.html_list);
+                        $("#foodItemModal").modal("hide");
+                        $("p#item-count").text("You have created " + response.item_count + " food items.");
+                    }
+                },
+                error: function (xhr) {
+                    // Re-render the form with error messages
+                    $("#foodItemModalContent").html(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).on("submit", "#mealForm", function (e) {
             e.preventDefault();
             var form = $(this);
             $.ajax({
