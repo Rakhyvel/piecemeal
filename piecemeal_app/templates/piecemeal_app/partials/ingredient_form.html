@@ -1,4 +1,4 @@
-<form method="post" id="ingredientForm" action="{% url 'create_ingredient_ajax' %}">
+<form method="post" class="create-food-item-form" action="{% url action_url_name food_item.id %}" data-type="ingredient">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save Ingredient</button>

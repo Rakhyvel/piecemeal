@@ -1,0 +1,31 @@
+<div id="meal-plan-{{ day }}">
+    <h3>{{ day|capfirst }}</h3>
+    Calories: {{ day_macros.calories }}
+    Protein: {{ day_macros.protein }}
+    Fat: {{ day_macros.fats }}
+    Carbs: {{ day_macros.carbs }}
+    <ul id="ingredient-rows-{{ day }}">
+        {% for schedule_entry in schedule_entries %}
+        <li data-entry-id="{{ schedule_entry.id }}" data-day="{{day}}" {% if not schedule_entry.food_item %} class="entry-error" {% endif %}>
+            <input type="text" class="entry-food-name-input"
+                value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">
+            <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off">
+            <button>✏️</button>
+            <form method="post" action="{% url 'delete_schedule_entry' schedule_entry.id day %}"
+                class="delete-schedule-entry-form">
+                {% csrf_token %}
+                <button type="submit">🗑️</button>
+            </form>
+            {% with macros=schedule_entry.macro_totals %}
+                Calories: {{ macros.calories }}
+                Protein: {{ macros.protein }}
+                Fat: {{ macros.fat }}
+                Carbs: {{ macros.carbs }}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="post" action="{% url 'create_schedule_entry' day %}" class="create-schedule-entry-form">
+        <button type="submit">+ Add Food</button>
+    </form>
+</div>

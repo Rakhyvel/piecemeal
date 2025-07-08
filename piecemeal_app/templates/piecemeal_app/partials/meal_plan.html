@@ -1,0 +1,8 @@
+<div class="meal-plan-container">
+    {% load dict_extras %}
+    {% for day in days_of_week %}
+    {% with schedule_entries=meals_by_day|get_item:day day_macros=macros_by_day|get_item:day %}
+    {% include "piecemeal_app/partials/day_plan.html" %}
+    {% endwith %}
+    {% endfor %}
+</div>
