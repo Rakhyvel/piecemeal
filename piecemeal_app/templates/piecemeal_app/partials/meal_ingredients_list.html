@@ -1,0 +1,45 @@
+<!-- 
+## Takes in:
+{
+  "ingredients": [
+    {
+      "name": String,
+      "quantity": Float,
+      "macros": {
+        "calories": Float,
+        "protein": Float,
+        "carbs": Float,
+        "fat": Float,
+      }
+    }
+  ],
+  "macros": {
+    "calories": Float,
+    "protein": Float,
+    "carbs": Float,
+    "fat": Float,
+  }
+}
+-->
+<div id="ingredient-rows">
+    {{ ingredients }}
+    <div id="macro-summary">
+        <strong>Estimated Macros:</strong>
+        <div>Calories: <span id="meal-macro-calories">{{ macros.calories }}</span></div>
+        <div>Protein: <span id="meal-macro-protein">{{ macros.protein }}</span> g</div>
+        <div>Carbs: <span id="meal-macro-carbs">{{ macros.carbs }}</span> g</div>
+        <div>Fats: <span id="meal-macro-fats">{{ macros.fats }}</span> g</div>
+    </div>
+
+    {% for ingredient in ingredients %}
+    <div class="ingredient-row">
+        <input type="text" name="ingredient_name" class="ingredient-name" value="{{ ingredient.name }}" placeholder="Ingredient name">
+        <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity }}" step="0.1">
+        <button type="button" class="remove-row">Remove</button>
+    </div>
+    Calories: {{ ingredient.macros.calories }}
+    Protein: {{ ingredient.macros.protein }}
+    Fat: {{ ingredient.macros.fat }}
+    Carbs: {{ ingredient.macros.carbs }}
+    {% endfor %}
+</div>

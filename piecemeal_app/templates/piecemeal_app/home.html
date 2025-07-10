@@ -279,7 +279,6 @@
         
         $(document).on("blur", "#ingredient-rows input", function() {
             const ingredients = [];
-            console.log("hi!");
 
             $("#ingredient-rows .ingredient-row").each(function() {
                 const name = $(this).find(".ingredient-name").val();
@@ -287,18 +286,15 @@
                 ingredients.push({ name: name, quantity: quantity });
             });
 
-            console.log(ingredients);
-
             $.ajax({
                 url: "/calculate_macros/",
                 type: "POST",
                 data: JSON.stringify({ ingredients: ingredients }),
                 contentType: "application/json",
                 success: function(response) {
-                    $("#meal-macro-calories").text(response.calories.toFixed(0));
-                    $("#meal-macro-protein").text(response.protein.toFixed(0));
-                    $("#meal-macro-carbs").text(response.carbs.toFixed(0));
-                    $("#meal-macro-fats").text(response.fats.toFixed(0));
+                    if (response.success) {
+                        $("#ingredient-rows").replaceWith(response.html_meal_ingredients_list);
+                    }
                 }
             });
         });

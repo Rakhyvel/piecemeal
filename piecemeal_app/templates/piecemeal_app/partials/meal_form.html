@@ -3,26 +3,10 @@
     
     {{ form.as_p }}
 
-    <div id="ingredient-rows">
-        {% for entry in entries %}
-        <div class="ingredient-row">
-            <input type="text" name="ingredient_name" class="ingredient-name" value="{{ entry.item.name }}" placeholder="Ingredient name">
-            <input type="number" name="ingredient_quantity" value="{{ entry.quantity }}" step="0.1">
-            <button type="button" class="remove-row">Remove</button>
-        </div>
-        {% endfor %}
-    </div>
+    {% include "piecemeal_app/partials/meal_ingredients_list.html" %}
 
     <button type="button" id="add-ingredient-row">+ Add Ingredient</button>
     <br><br>
-
-    <div id="macro-summary">
-        <strong>Estimated Macros:</strong>
-        <div>Calories: <span id="meal-macro-calories">0</span></div>
-        <div>Protein: <span id="meal-macro-protein">0</span> g</div>
-        <div>Carbs: <span id="meal-macro-carbs">0</span> g</div>
-        <div>Fats: <span id="meal-macro-fats">0</span> g</div>
-    </div>
 
     <button type="submit">Save Meal</button>
     <button type="button" data-dismiss="modal">Cancel</button>

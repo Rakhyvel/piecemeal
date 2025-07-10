@@ -22,13 +22,45 @@ class FoodItem(models.Model):
                 "fats": self.fats,
             }
         else:
-            total = {"calories": 0, "protein": 0, "carbs": 0, "fats": 0}
+            total = {"calories": 0.0, "protein": 0.0, "carbs": 0.0, "fats": 0.0}
             for entry in self.entries.all():
                 child_macros = entry.item.macro_totals()
                 factor = entry.quantity
                 for k in total:
                     total[k] += child_macros[k] * factor
             return total
+
+    """
+      "name": String,
+      "quantity": Float,
+      "macros": {
+        "calories": Float,
+        "protein": Float,
+        "carbs": Float,
+        "fat": Float,
+      }
+    """
+
+    def get_ingredients(self):
+        retval = []
+        entries: list[MealEntry] = self.entries.all()
+        for entry in entries:
+            retval.append(
+                {
+                    "name": entry.item.name,
+                    "quantity": entry.quantity,
+                    "macros": entry.item.macro_totals(),
+                }
+            )
+        return retval
+
+    @classmethod
+    def get_macros_by_name(cls, owner, quantity: float, name: str):
+        food_item = cls.objects.get(name__iexact=name, owner=owner)
+        macros = food_item.macro_totals()
+        for k in macros:
+            macros[k] *= quantity
+        return macros
 
 
 def _calculate_macros(user, ingredients: list[dict]) -> dict:

@@ -78,13 +78,13 @@ def get_food_item_form(request, food_item_pk=None):
     if food_item_pk:
         food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
         is_meal = food_item.is_meal
-        entries = food_item.entries.all()
+        ingredients = food_item.get_ingredients()
         macros = food_item.macro_totals()
         action_url_name = "edit_food_item"
     else:
         is_meal = False
         food_item = None
-        entries = []
+        ingredients = []
         macros = None
         action_url_name = "create_food_item"
 
@@ -104,7 +104,7 @@ def get_food_item_form(request, food_item_pk=None):
         {
             "form": form,
             "food_item": food_item,
-            "entries": entries,
+            "ingredients": ingredients,
             "macros": macros,
             "action_url_name": action_url_name,
         },
@@ -292,7 +292,28 @@ def delete_schedule_entry(request, pk, day):
 @require_POST
 @login_required
 def calculate_macros(request):
+    def decorate_with_macros(ingredients):
+        for ingredient in ingredients:
+            try:
+                quantity = float(ingredient["quantity"])
+                name = ingredient["name"]
+                ingredient["macros"] = FoodItem.get_macros_by_name(
+                    request.user, quantity, name
+                )
+            except FoodItem.DoesNotExist:
+                pass
+
     data = json.loads(request.body)
     ingredients = data.get("ingredients", [])
+    decorate_with_macros(ingredients)
     macros = _calculate_macros(request.user, ingredients)
-    return JsonResponse(macros)
+    html_meal_ingredients_list = render_to_string(
+        "piecemeal_app/partials/meal_ingredients_list.html",
+        {
+            "ingredients": ingredients,
+            "macros": macros,
+        },
+    )
+    return JsonResponse(
+        {"success": True, "html_meal_ingredients_list": html_meal_ingredients_list}
+    )
