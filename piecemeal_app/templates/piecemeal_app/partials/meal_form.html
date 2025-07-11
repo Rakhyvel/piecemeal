@@ -1,5 +1,13 @@
-<form method="post" class="create-food-item-form" action="{% url action_url_name food_item.id %}" data-type="meal">
-    {% csrf_token %}
+{% if not food_item %}
+<div class="form-check form-switch mb-3">
+<input class="form-check-input" type="checkbox" id="toggleFormSwitch" checked>
+<label class="form-check-label" for="toggleFormSwitch" id="toggleLabel">Add Meal</label>
+</div>
+{% endif %}
+<form method="post"
+    class="create-food-item-form"
+    action="{% if food_item %}{% url action_url_name food_item.id %}{% else %}{% url action_url_name %}{% endif %}" 
+    data-type="meal">
     
     {{ form.as_p }}
 

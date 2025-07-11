@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from .forms import IngredientForm, MealForm
+from .forms import IngredientForm, MealForm, ScheduleEntryForm
 from .models import FoodItem, MealEntry, ScheduleEntry, _calculate_macros
 import json
 
@@ -74,7 +74,6 @@ def home(request):
 
 @login_required
 def get_food_item_form(request, food_item_pk=None):
-    print(food_item_pk)
     if food_item_pk:
         food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
         is_meal = food_item.is_meal
@@ -82,11 +81,13 @@ def get_food_item_form(request, food_item_pk=None):
         macros = food_item.macro_totals()
         action_url_name = "edit_food_item"
     else:
-        is_meal = False
+        is_meal = request.GET.get("is_meal") == "true"
         food_item = None
         ingredients = []
         macros = None
         action_url_name = "create_food_item"
+
+    print(food_item_pk, is_meal)
 
     if is_meal:
         (form_html_file, form) = "piecemeal_app/partials/meal_form.html", MealForm(
@@ -109,6 +110,34 @@ def get_food_item_form(request, food_item_pk=None):
             "action_url_name": action_url_name,
         },
     )
+
+
+@login_required
+def get_schedule_entry_form(request, entry_id=None):
+    print(entry_id)
+    if entry_id:
+        schedule_entry = get_object_or_404(
+            ScheduleEntry, pk=entry_id, user=request.user
+        )
+        macros = schedule_entry.macro_totals()
+        action_url_name = "update_schedule_entry"
+    else:
+        schedule_entry = None
+        macros = {"calories": 0, "protein": 0, "fat": 0, "carbs": 0}
+        action_url_name = "create_schedule_entry"
+        print("hi!")
+
+    test = render(
+        request,
+        "piecemeal_app/partials/schedule_entry_form.html",
+        {
+            "schedule_entry": schedule_entry,
+            "action_url_name": action_url_name,
+            "macros": macros,
+        },
+    )
+    print(test.content)
+    return test
 
 
 def save_food_item_from_form(request, form, food_item=None):
@@ -221,7 +250,8 @@ def delete_food_item(request, pk):
 
 @require_POST
 @login_required
-def create_schedule_entry(request, day):
+def create_schedule_entry(request):
+    day = request.POST.get("day")
     _ = ScheduleEntry.objects.create(
         user=request.user, day=day, quantity=1, food_item=None
     )
@@ -235,9 +265,7 @@ def create_schedule_entry(request, day):
 
 @require_POST
 @login_required
-def update_schedule_entry(request):
-    day = request.POST.get("day")
-    entry_id = request.POST.get("entry_id")
+def update_schedule_entry(request, entry_id):
     name = request.POST.get("name")
     quantity = request.POST.get("quantity")
 
@@ -263,12 +291,13 @@ def update_schedule_entry(request):
 
     entry.save()
 
+    day = entry.day
     context = get_meal_plan_context(request.user)
     context["schedule_entries"] = context["meals_by_day"][day]
     context["day_macros"] = context["macros_by_day"][day]
     context["day"] = day
     html_day_plan = render_to_string("piecemeal_app/partials/day_plan.html", context)
-    return JsonResponse({"success": True, "html_day_plan": html_day_plan})
+    return JsonResponse({"success": True, "html_day_plan": html_day_plan, "day": day})
 
 
 @require_POST
@@ -317,3 +346,19 @@ def calculate_macros(request):
     return JsonResponse(
         {"success": True, "html_meal_ingredients_list": html_meal_ingredients_list}
     )
+
+
+@require_POST
+@login_required
+def calculate_macros_schedule_item(request):
+    quantity = float(request.POST.get("quantity"))
+    name = request.POST.get("name")
+
+    macros = FoodItem.get_macros_by_name(request.user, quantity, name)
+    html_macros = render_to_string(
+        "piecemeal_app/partials/schedule_entry_form_macros.html",
+        {
+            "macros": macros,
+        },
+    )
+    return JsonResponse({"success": True, "html_macros": html_macros})

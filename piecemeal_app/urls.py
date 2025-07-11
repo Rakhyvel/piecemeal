@@ -26,12 +26,22 @@ urlpatterns = [
         name="delete_food_item",
     ),
     path(
-        "schedule_entry/create/<str:day>/",
+        "schedule_entry/form/",
+        views.get_schedule_entry_form,
+        name="get_create_schedule_entry",
+    ),
+    path(
+        "schedule_entry/form/<int:entry_id>/",
+        views.get_schedule_entry_form,
+        name="get_edit_schedule_entry",
+    ),
+    path(
+        "schedule_entry/create/",
         views.create_schedule_entry,
         name="create_schedule_entry",
     ),
     path(
-        "schedule_entry/update/",
+        "schedule_entry/update/<int:entry_id>",
         views.update_schedule_entry,
         name="update_schedule_entry",
     ),
@@ -41,4 +51,9 @@ urlpatterns = [
         name="delete_schedule_entry",
     ),
     path("calculate_macros/", views.calculate_macros, name="calculate_macros"),
+    path(
+        "calculate_macros_schedule_item/",
+        views.calculate_macros_schedule_item,
+        name="calculate_macros_schedule_item",
+    ),
 ]

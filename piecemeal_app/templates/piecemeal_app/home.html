@@ -36,12 +36,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Toggle for selecting form -->
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="toggleFormSwitch" checked>
-                        <label class="form-check-label" for="toggleFormSwitch" id="toggleLabel">Add Meal</label>
-                    </div>
-
                     <!-- Container where form HTML will be injected -->
                     <div id="formContainer">
                         <!-- AJAX-loaded form will go here -->
@@ -111,29 +105,39 @@
         })
 
         $(document).on("click", "#create-food-item", function () {
-            $("#toggleFormSwitch").prop("checked", false);
+            $(".modal-title").text("Add Food Item");
+            $("#toggleFormSwitch").prop("checked", true);
             $("#toggleLabel").text("Add Ingredient");
-            loadForm(false);
+            loadForm("food_item", {is_meal: true});
+            $("#foodItemModal").modal("show");
+        });
+
+        $(document).on("click", "#create-schedule-entry", function () {
+            $(".modal-title").text("Add Food Item");
+            loadForm("schedule_entry", {});
+            $(".modal-title").text("Add Schedule Entry");
             $("#foodItemModal").modal("show");
         });
 
         // When user toggles between forms
-        $("#toggleFormSwitch").change(function () {
+        $(document).on("change", "#toggleFormSwitch", function () {
             if ($(this).is(":checked")) {
                 $("#toggleLabel").text("Add Meal");
-                loadForm(true);
+                loadForm("food_item", {is_meal: true});
             } else {
                 $("#toggleLabel").text("Add Ingredient");
-                loadForm(false);
+                loadForm("food_item", {is_meal: false});
             }
         });
 
         // Function to load form via AJAX
-        function loadForm(is_meal) {
+        function loadForm(url, data) {
+            $("#formContainer").empty();
+
             $.ajax({
-                url: "food_item/form/",
+                url: url + "/form/",
                 type: "GET",
-                data: {is_meal: is_meal},
+                data: data,
                 success: function (data) {
                     $("#formContainer").html(data);
                 },
@@ -180,12 +184,26 @@
         });
 
         $(document).on("click", ".edit-food-item", function(e) {
+            $(".modal-title").text("Edit Food Item");
             const food_item_id = $(this).data("id");
             $.ajax({
                 url: "/food_item/form/" + food_item_id + "/",
                 type: "GET",
                 success: function (data) {
-                    $("#foodItemModalContent").html(data);
+                    $("#formContainer").html(data);
+                    $("#foodItemModal").modal("show");
+                }
+            });
+        });
+
+        $(document).on("click", ".edit-schedule-entry", function(e) {
+            $(".modal-title").text("Edit Schedule Entry");
+            const entry_id = $(this).data("id");
+            $.ajax({
+                url: "/schedule_entry/form/" + entry_id + "/",
+                type: "GET",
+                success: function (data) {
+                    $("#formContainer").html(data);
                     $("#foodItemModal").modal("show");
                 }
             });
@@ -215,45 +233,26 @@
             e.preventDefault();
             var form = this;
 
+            const foodName = $(form).find(".entry-food-name-input").val();
+            const quantity = $(form).find(".entry-quantity-input").val();
+
             $.ajax({
                 url: form.action,
                 type: form.method,
-                data: {},
+                data: {
+                    name: foodName,
+                    quantity: quantity
+                },
                 success: function (response) {
                     if (response.success) {
                         $("#meal-plan-" + response.day).replaceWith(response.html_day_plan);
+                        $("#foodItemModal").modal("hide");
+                    } else {
+                        console.log(xhr.responseText);
                     }
                 },
                 error: function (xhr) {
                     $("#formContainer").html(xhr.responseText);
-                }
-            });
-        });
-
-
-        $(document).on("blur", ".entry-food-name-input, .entry-quantity-input", function () {
-            var input = $(this);
-            var li = input.closest("li");
-            var entryId = li.data("entry-id");
-            var day = li.data("day");
-            var name = li.find(".entry-food-name-input").val();
-            var quantity = li.find(".entry-quantity-input").val();
-
-            $.ajax({
-                url: "/schedule_entry/update/",
-                type: "POST",
-                data: {
-                    entry_id: entryId,
-                    day: day,
-                    name: name,
-                    quantity: quantity,
-                },
-                success: function (response) {
-                    li.removeClass("entry-error");
-                    $("#meal-plan-" + day).replaceWith(response.html_day_plan);
-                },
-                error: function (xhr) {
-                    li.addClass("entry-error");
                 }
             });
         });
@@ -294,6 +293,23 @@
                 success: function(response) {
                     if (response.success) {
                         $("#ingredient-rows").replaceWith(response.html_meal_ingredients_list);
+                    }
+                }
+            });
+        });
+        
+        $(document).on("blur", ".create-schedule-entry-form input", function() {
+            const form = $(this).closest("form");
+            const name = form.find(".entry-food-name-input").val();
+            const quantity = form.find(".entry-quantity-input").val();
+
+            $.ajax({
+                url: "/calculate_macros_schedule_item/",
+                type: "POST",
+                data: { name: name, quantity: quantity },
+                success: function(response) {
+                    if (response.success) {
+                        $("#scheudle-entry-macros").replaceWith(response.html_macros);
                     }
                 }
             });

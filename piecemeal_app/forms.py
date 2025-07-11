@@ -1,5 +1,5 @@
 from django import forms
-from .models import FoodItem
+from .models import FoodItem, ScheduleEntry
 
 
 class IngredientForm(forms.ModelForm):
@@ -12,3 +12,9 @@ class MealForm(forms.ModelForm):
     class Meta:
         model = FoodItem
         fields = ["name"]
+
+
+class ScheduleEntryForm(forms.ModelForm):
+    class Meta:
+        model = ScheduleEntry
+        fields = ["quantity"]

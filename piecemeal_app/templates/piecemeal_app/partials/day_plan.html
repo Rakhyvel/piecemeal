@@ -7,10 +7,9 @@
     <ul id="ingredient-rows-{{ day }}">
         {% for schedule_entry in schedule_entries %}
         <li data-entry-id="{{ schedule_entry.id }}" data-day="{{day}}" {% if not schedule_entry.food_item %} class="entry-error" {% endif %}>
-            <input type="text" class="entry-food-name-input"
-                value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">
-            <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off">
-            <button class="edit-food-item" data-id='{{ schedule_entry.food_item.id }}'>✏️</button>
+            <span>{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %} {{ schedule_entry.quantity }}</span>
+            <button class="edit-schedule-entry" data-id='{{ schedule_entry.id }}'>✏️</button>
+            <button class="edit-food-item" data-id='{{ schedule_entry.food_item.id }}'>👨‍🍳</button>
             <form method="post" action="{% url 'delete_schedule_entry' schedule_entry.id day %}"
                 class="delete-schedule-entry-form">
                 {% csrf_token %}
@@ -25,7 +24,7 @@
         </li>
         {% endfor %}
     </ul>
-    <form method="post" action="{% url 'create_schedule_entry' day %}" class="create-schedule-entry-form">
-        <button type="submit">+ Add Food</button>
-    </form>
+    <button class="btn btn-primary" id="create-schedule-entry">
+        + Add Food 
+    </button>
 </div>
