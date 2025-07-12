@@ -313,20 +313,17 @@ function setupAutocomplete(input) {
 // Add new ingredient rows
 $(document).on("click", "#add-ingredient-row", function () {
     var newRow = $(`
-        <div class="ingredient-row">
-            <input type="text" name="ingredient_name" class="ingredient-name" placeholder="Ingredient name">
-            <input type="number" name="ingredient_quantity" value="1" step="0.1">
-            <button type="button" class="remove-row">Remove</button>
-        </div>
+    {% include "piecemeal_app/partials/meal_ingredient_item.html" %}
     `);
     $("#ingredient-rows").append(newRow);
     setupAutocomplete(newRow.find(".ingredient-name"));
 });
+$(document).on("click", "#add-ingredient-row", updateMealMacros);
 
-// Remove row
 $(document).on("click", ".remove-row", function () {
     $(this).closest(".ingredient-row").remove();
 });
+$(document).on("click", ".remove-row", updateMealMacros);
 
 // Initialize autocomplete for any initial rows
 $(".ingredient-name").each(function () {

@@ -103,8 +103,21 @@ class FoodItem(models.Model):
         else:
             total = EMPTY_MACROS.copy()
             for entry in self.entries.all():
-                child_macros = entry.item.macro_totals()
-                factor = entry.quantity
+                food_item = entry.item
+                food_item_unit = food_item.unit
+                food_item_quantity = food_item.quantity
+                ingredient_unit = entry.unit
+                unit_conversion_factor = get_unit_conversion_factor(
+                    ingredient_unit, food_item_unit
+                )
+                child_macros = food_item.macro_totals()
+                # 50 g = 100 cal
+                # 1 kg = ? cal
+                # 1000 g = ? cal
+                # 1000 g = (1000 / 50) * 100 cal
+                factor = (
+                    float(entry.quantity) * unit_conversion_factor / food_item_quantity
+                )
                 for k in total:
                     total[k] += child_macros[k] * factor
             return total

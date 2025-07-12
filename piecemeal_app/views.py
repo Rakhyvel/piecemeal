@@ -138,8 +138,6 @@ def get_schedule_entry_form(request, entry_id=None):
         compatible_units = []
         ingredient_unit = ""
 
-    print(ingredient_unit)
-
     test = render(
         request,
         "piecemeal_app/partials/schedule_entry_form.html",
@@ -183,8 +181,9 @@ def save_food_item_from_form(
 
         names = request.POST.getlist("ingredient_name")
         quantities = request.POST.getlist("ingredient_quantity")
+        units = request.POST.getlist("ingredient_unit")
 
-        for name, quantity_str in zip(names, quantities):
+        for name, quantity_str, unit in zip(names, quantities, units):
             ingredient = FoodItem.objects.filter(
                 owner=request.user, name__iexact=name, is_meal=False
             ).first()
@@ -196,7 +195,9 @@ def save_food_item_from_form(
             except ValueError:
                 quantity = 1
 
-            MealEntry.objects.create(meal=food_item, item=ingredient, quantity=quantity)
+            MealEntry.objects.create(
+                meal=food_item, item=ingredient, quantity=quantity, unit=unit
+            )
 
     return food_item
 
@@ -367,19 +368,27 @@ def calculate_macros(request):
     def decorate_with_macros(ingredients):
         for ingredient in ingredients:
             try:
-                quantity = float(ingredient["quantity"])
+                try:
+                    quantity = float(ingredient["quantity"])
+                except ValueError:
+                    quantity = 0.0
+                    ingredient["quantity"] = 0.0
                 name = ingredient["name"]
                 food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+                unit = ingredient["unit"]
+                compatible_units = get_compatible_units(food_item.unit)
+                if unit not in compatible_units:
+                    unit = compatible_units[0]
                 ingredient["macros"] = food_item.get_macros_adjusted_with_unit(
-                    quantity, ingredient["unit"]
+                    quantity, unit
                 )
-                ingredient["compatible_units"] = get_compatible_units(food_item.unit)
+                ingredient["unit"] = unit
+                ingredient["compatible_units"] = compatible_units
             except FoodItem.DoesNotExist:
                 pass
 
     data = json.loads(request.body)
     ingredients = data.get("ingredients", [])
-    print(ingredients)
     decorate_with_macros(ingredients)
     macros = sum_total_macros(request.user, ingredients)
     html_meal_ingredients_list = render_to_string(
