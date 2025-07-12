@@ -46,7 +46,7 @@ urlpatterns = [
         name="update_schedule_entry",
     ),
     path(
-        "unschedule/<int:pk>/<str:day>/",
+        "unschedule/<int:pk>/",
         views.delete_schedule_entry,
         name="delete_schedule_entry",
     ),

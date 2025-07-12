@@ -1,0 +1,7 @@
+<div id="scheudle-entry-units">
+    <select name="ingredient_unit" class="form-select unit-select">
+        {% for unit in compatible_units %}
+        <option value="{{ unit }}"{% if unit == ingredient_unit %} selected{% endif %}>{{ unit }}</option>
+        {% endfor %}
+    </select>
+</div>

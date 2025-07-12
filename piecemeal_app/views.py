@@ -6,44 +6,51 @@ from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .forms import IngredientForm, MealForm, ScheduleEntryForm
-from .models import FoodItem, MealEntry, ScheduleEntry, _calculate_macros
+from datetime import datetime
+from .models import (
+    FoodItem,
+    MealEntry,
+    ScheduleEntry,
+    sum_total_macros,
+    get_compatible_units,
+    EMPTY_MACROS,
+)
 import json
 
 
+DAYS_OF_WEEK = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+]
+
+
 def get_meal_plan_context(user):
-    DAYS_OF_WEEK = [
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-    ]
     food_item_qs = FoodItem.objects.filter(owner=user)
     schedule_entry_qs = ScheduleEntry.objects.filter(user=user)
 
     meals_by_day = {d: [] for d in DAYS_OF_WEEK}
-    macros_by_day = {
-        day: {"calories": 0.0, "protein": 0.0, "fats": 0.0, "carbs": 0.0}
-        for day in DAYS_OF_WEEK
-    }
+    macros_by_day = {day: EMPTY_MACROS.copy() for day in DAYS_OF_WEEK}
 
     for schedule_entry in schedule_entry_qs:
-        day = schedule_entry.day
-        meals_by_day[day].append(schedule_entry)
+        for day in schedule_entry.days:
+            meals_by_day[day.lower()].append(schedule_entry)
 
-        if schedule_entry.food_item:
-            macros = schedule_entry.food_item.macro_totals()
-            factor = schedule_entry.quantity
-            for k in macros_by_day[day]:
-                macros_by_day[day][k] += macros[k] * factor
+            if schedule_entry.food_item:
+                macros = schedule_entry.macro_totals()
+                for k in macros_by_day[day.lower()]:
+                    macros_by_day[day.lower()][k] += macros[k]
 
     return {
         "food_items": food_item_qs,
         "days_of_week": DAYS_OF_WEEK,
         "meals_by_day": meals_by_day,
         "macros_by_day": macros_by_day,
+        "timestamp": int(datetime.utcnow().timestamp()),
     }
 
 
@@ -78,7 +85,7 @@ def get_food_item_form(request, food_item_pk=None):
         food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
         is_meal = food_item.is_meal
         ingredients = food_item.get_ingredients()
-        macros = food_item.macro_totals()
+        macros = sum_total_macros(request.user, ingredients)
         action_url_name = "edit_food_item"
     else:
         is_meal = request.GET.get("is_meal") == "true"
@@ -86,8 +93,6 @@ def get_food_item_form(request, food_item_pk=None):
         ingredients = []
         macros = None
         action_url_name = "create_food_item"
-
-    print(food_item_pk, is_meal)
 
     if is_meal:
         (form_html_file, form) = "piecemeal_app/partials/meal_form.html", MealForm(
@@ -114,18 +119,26 @@ def get_food_item_form(request, food_item_pk=None):
 
 @login_required
 def get_schedule_entry_form(request, entry_id=None):
-    print(entry_id)
     if entry_id:
         schedule_entry = get_object_or_404(
             ScheduleEntry, pk=entry_id, user=request.user
         )
+        food_item = schedule_entry.food_item
+        if food_item:
+            compatible_units = get_compatible_units(food_item.unit)
+        else:
+            compatible_units = []
         macros = schedule_entry.macro_totals()
+        ingredient_unit = schedule_entry.unit
         action_url_name = "update_schedule_entry"
     else:
         schedule_entry = None
-        macros = {"calories": 0, "protein": 0, "fat": 0, "carbs": 0}
+        macros = EMPTY_MACROS.copy()
         action_url_name = "create_schedule_entry"
-        print("hi!")
+        compatible_units = []
+        ingredient_unit = ""
+
+    print(ingredient_unit)
 
     test = render(
         request,
@@ -133,19 +146,34 @@ def get_schedule_entry_form(request, entry_id=None):
         {
             "schedule_entry": schedule_entry,
             "action_url_name": action_url_name,
+            "compatible_units": compatible_units,
+            "ingredient_unit": ingredient_unit,
             "macros": macros,
+            "days_of_week": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ],
         },
     )
-    print(test.content)
     return test
 
 
-def save_food_item_from_form(request, form, food_item=None):
+def save_food_item_from_form(
+    request, form: IngredientForm | MealForm, food_item=None
+) -> FoodItem:
     is_meal = request.POST.get("is_meal") == "true"
 
     food_item = form.save(commit=False)
     food_item.owner = request.user
     food_item.is_meal = is_meal
+    if is_meal:
+        food_item.unit = "servings"
+        food_item.quantity = 1
     food_item.save()
 
     if is_meal:
@@ -240,10 +268,12 @@ def delete_food_item(request, pk):
 
     context = get_meal_plan_context(request.user)
     html_library = render_to_string("piecemeal_app/partials/library.html", context)
+    html_meal_plan = render_to_string("piecemeal_app/partials/meal_plan.html", context)
     return JsonResponse(
         {
             "success": True,
             "html_library": html_library,
+            "html_meal_plan": html_meal_plan,
         },
     )
 
@@ -251,16 +281,28 @@ def delete_food_item(request, pk):
 @require_POST
 @login_required
 def create_schedule_entry(request):
-    day = request.POST.get("day")
+    name = request.POST.get("name")
+    quantity = float(request.POST.get("quantity"))
+    unit = request.POST.get("unit")
+    days = request.POST.getlist("days")
+
+    if len(days) == 0:
+        return JsonResponse({"success": False, "error": "No days selected"}, status=400)
+
+    try:
+        food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+    except FoodItem.DoesNotExist:
+        return JsonResponse(
+            {"success": False, "error": "Food item not found"}, status=400
+        )
+
     _ = ScheduleEntry.objects.create(
-        user=request.user, day=day, quantity=1, food_item=None
+        user=request.user, days=days, quantity=quantity, food_item=food_item, unit=unit
     )
 
     context = get_meal_plan_context(request.user)
-    context["schedule_entries"] = context["meals_by_day"][day]
-    context["day"] = day
-    html_day_plan = render_to_string("piecemeal_app/partials/day_plan.html", context)
-    return JsonResponse({"success": True, "html_day_plan": html_day_plan, "day": day})
+    html_meal_plan = render_to_string("piecemeal_app/partials/meal_plan.html", context)
+    return JsonResponse({"success": True, "html_meal_plan": html_meal_plan})
 
 
 @require_POST
@@ -268,8 +310,16 @@ def create_schedule_entry(request):
 def update_schedule_entry(request, entry_id):
     name = request.POST.get("name")
     quantity = request.POST.get("quantity")
+    unit = request.POST.get("unit")
+    days = request.POST.getlist("days")
+
+    if len(days) == 0:
+        return delete_schedule_entry(request, entry_id)
 
     entry = ScheduleEntry.objects.get(id=entry_id, user=request.user)
+
+    entry.unit = unit
+    entry.days = days
 
     # Update quantity
     try:
@@ -291,18 +341,14 @@ def update_schedule_entry(request, entry_id):
 
     entry.save()
 
-    day = entry.day
     context = get_meal_plan_context(request.user)
-    context["schedule_entries"] = context["meals_by_day"][day]
-    context["day_macros"] = context["macros_by_day"][day]
-    context["day"] = day
-    html_day_plan = render_to_string("piecemeal_app/partials/day_plan.html", context)
-    return JsonResponse({"success": True, "html_day_plan": html_day_plan, "day": day})
+    html_meal_plan = render_to_string("piecemeal_app/partials/meal_plan.html", context)
+    return JsonResponse({"success": True, "html_meal_plan": html_meal_plan})
 
 
 @require_POST
 @login_required
-def delete_schedule_entry(request, pk, day):
+def delete_schedule_entry(request, pk):
     schedule_entry = get_object_or_404(
         ScheduleEntry,
         pk=pk,
@@ -311,11 +357,8 @@ def delete_schedule_entry(request, pk, day):
     schedule_entry.delete()
 
     context = get_meal_plan_context(request.user)
-    context["schedule_entries"] = context["meals_by_day"][day]
-    context["day_macros"] = context["macros_by_day"][day]
-    context["day"] = day
-    html_day_plan = render_to_string("piecemeal_app/partials/day_plan.html", context)
-    return JsonResponse({"success": True, "html_day_plan": html_day_plan, "day": day})
+    html_meal_plan = render_to_string("piecemeal_app/partials/meal_plan.html", context)
+    return JsonResponse({"success": True, "html_meal_plan": html_meal_plan})
 
 
 @require_POST
@@ -326,16 +369,19 @@ def calculate_macros(request):
             try:
                 quantity = float(ingredient["quantity"])
                 name = ingredient["name"]
-                ingredient["macros"] = FoodItem.get_macros_by_name(
-                    request.user, quantity, name
+                food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+                ingredient["macros"] = food_item.get_macros_adjusted_with_unit(
+                    quantity, ingredient["unit"]
                 )
+                ingredient["compatible_units"] = get_compatible_units(food_item.unit)
             except FoodItem.DoesNotExist:
                 pass
 
     data = json.loads(request.body)
     ingredients = data.get("ingredients", [])
+    print(ingredients)
     decorate_with_macros(ingredients)
-    macros = _calculate_macros(request.user, ingredients)
+    macros = sum_total_macros(request.user, ingredients)
     html_meal_ingredients_list = render_to_string(
         "piecemeal_app/partials/meal_ingredients_list.html",
         {
@@ -351,14 +397,33 @@ def calculate_macros(request):
 @require_POST
 @login_required
 def calculate_macros_schedule_item(request):
-    quantity = float(request.POST.get("quantity"))
     name = request.POST.get("name")
+    unit = request.POST.get("unit")
+    food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
 
-    macros = FoodItem.get_macros_by_name(request.user, quantity, name)
+    try:
+        quantity = float(request.POST.get("quantity"))
+        macros = food_item.get_macros_adjusted_with_unit(quantity, unit)
+    except ValueError:
+        macros = EMPTY_MACROS.copy()
+
+    compatible_units = get_compatible_units(food_item.unit)
+    if unit not in compatible_units:
+        unit = compatible_units[0]
+
     html_macros = render_to_string(
         "piecemeal_app/partials/schedule_entry_form_macros.html",
         {
             "macros": macros,
         },
     )
-    return JsonResponse({"success": True, "html_macros": html_macros})
+    html_units = render_to_string(
+        "piecemeal_app/partials/schedule_entry_form_units.html",
+        {
+            "ingredient_unit": unit,
+            "compatible_units": compatible_units,
+        },
+    )
+    return JsonResponse(
+        {"success": True, "html_macros": html_macros, "html_units": html_units}
+    )

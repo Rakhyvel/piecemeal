@@ -1,29 +1,38 @@
 {% load dict_extras %}
-<div id="library">
-    <div class="day">
-        <h3>Saved Foods</h3>
-        <button class="btn btn-primary" id="create-food-item">
-            + New Food Item
-        </button>
-        <ul>
-            {% for food_item in food_items %}
-            <li>
-                <span class="ingredient-name">{{ food_item.name }}</span>
-                <button class="edit-food-item" data-id='{{ food_item.id }}'>✏️</button>
-                <form method="post" action="{% url 'delete_food_item' food_item.id %}" class="delete-food-item-form">
-                    {% csrf_token %}
-                    <button type="submit">🗑️</button>
-                </form>
-                {% with macros=food_item.macro_totals %}
-                    Calories: {{ macros.calories }}
-                    Protein: {{ macros.protein }}
-                    Fats: {{ macros.fats }}
-                    Carbs: {{ macros.carbs }}
-                {% endwith %}
-            </li>
-            {% empty %}
-            <li>No food added.</li>
-            {% endfor %}
-        </ul>
-    </div>
+{% load format_extras %}
+<div id="library" class="day-container">
+    <h3>Saved Foods</h3>
+    <button class="btn btn-primary" id="create-food-item">
+        + New Food Item
+    </button>
+    <ul>
+        {% for food_item in food_items %}
+        <li class="library-food-item">
+            <div class="library-food-item-top">
+                <span class="library-food-item-name ingredient-name">{{ food_item.quantity|smart_float }} {{ food_item.unit }} {{ food_item.name }}</span>
+                <div class="library-food-item-buttons dropdown">
+                    <button class="kebab-toggle">&hellip;</button>
+                    <div class="dropdown-menu">
+                        <button class="edit-food-item" data-id='{{ food_item.id }}'>👨‍🍳 Edit Food</button>
+                        <form method="post" action="{% url 'delete_food_item' food_item.id %}" class="delete-food-item-form">
+                            {% csrf_token %}
+                            <button type="submit">🗑️ Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% with macros=food_item.macro_totals %}
+            <div class="library-food-item-macros macros">
+                <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
+                <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
+                <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
+                <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
+            </div>
+            {% endwith %}
+        </li>
+        {% empty %}
+        <li>No food added.</li>
+        {% endfor %}
+    </ul>
 </div>

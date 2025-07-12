@@ -10,7 +10,8 @@
         "protein": Float,
         "carbs": Float,
         "fat": Float,
-      }
+      },
+      "compatible_units": [String]
     }
   ],
   "macros": {
@@ -32,13 +33,18 @@
 
     {% for ingredient in ingredients %}
     <div class="ingredient-row">
+        <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity }}" step="0.1" style="width:4em;">
+        <select name="ingredient_unit" class="form-select unit-select">
+            {% for unit in ingredient.compatible_units %}
+            <option value="{{ unit }}"{% if unit == ingredient.unit %} selected{% endif %}>{{ unit }}</option>
+            {% endfor %}
+        </select>
         <input type="text" name="ingredient_name" class="ingredient-name" value="{{ ingredient.name }}" placeholder="Ingredient name">
-        <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity }}" step="0.1">
-        <button type="button" class="remove-row">Remove</button>
+        <button type="button" class="remove-row">❌</button>
     </div>
     Calories: {{ ingredient.macros.calories }}
     Protein: {{ ingredient.macros.protein }}
-    Fat: {{ ingredient.macros.fat }}
+    Fats: {{ ingredient.macros.fats }}
     Carbs: {{ ingredient.macros.carbs }}
     {% endfor %}
 </div>

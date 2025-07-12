@@ -1,11 +1,28 @@
 <form method="post"
       class="create-schedule-entry-form"
       action="{% if schedule_entry %}{% url action_url_name schedule_entry.id %}{% else %}{% url action_url_name %}{% endif %}">
+    <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off" style="width:4em;" step="any">
+    {% include "piecemeal_app/partials/schedule_entry_form_units.html" %}
     <input type="text" class="entry-food-name-input"
         value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">
-    <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off">
     <br>
     {% include "piecemeal_app/partials/schedule_entry_form_macros.html" %}
+    <br>
+    <div class="day-checkboxes">
+    {% for day in days_of_week %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input"
+            type="checkbox"
+            name="days"
+            value="{{ day }}"
+            id="day-{{ day|lower }}"
+            {% if day in schedule_entry.days %}checked{% endif %}>
+        <label class="form-check-label" for="day-{{ day|lower }}">
+        {{ day|slice:":2" }}
+        </label>
+    </div>
+    {% endfor %}
+    </div>
     <br><br>
 
     <button type="submit">Save</button>

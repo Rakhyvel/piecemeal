@@ -1,30 +1,46 @@
-<div id="meal-plan-{{ day }}">
+{% load format_extras %}
+<div id="meal-plan-{{ day }}" class="day-container">
     <h3>{{ day|capfirst }}</h3>
-    Calories: {{ day_macros.calories }}
-    Protein: {{ day_macros.protein }}
-    Fat: {{ day_macros.fats }}
-    Carbs: {{ day_macros.carbs }}
+    <div class="day-macros macros">
+        <span class="macro-pill">🔥 {{ day_macros.calories|smart_float }} kcal</span>
+        <span class="macro-pill">🍗 {{ day_macros.protein|smart_float }}g</span>
+        <span class="macro-pill">🥑 {{ day_macros.fats|smart_float }}g</span>
+        <span class="macro-pill">🍞 {{ day_macros.carbs|smart_float }}g</span>
+    </div>
     <ul id="ingredient-rows-{{ day }}">
         {% for schedule_entry in schedule_entries %}
-        <li data-entry-id="{{ schedule_entry.id }}" data-day="{{day}}" {% if not schedule_entry.food_item %} class="entry-error" {% endif %}>
-            <span>{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %} {{ schedule_entry.quantity }}</span>
-            <button class="edit-schedule-entry" data-id='{{ schedule_entry.id }}'>✏️</button>
-            <button class="edit-food-item" data-id='{{ schedule_entry.food_item.id }}'>👨‍🍳</button>
-            <form method="post" action="{% url 'delete_schedule_entry' schedule_entry.id day %}"
-                class="delete-schedule-entry-form">
-                {% csrf_token %}
-                <button type="submit">🗑️</button>
-            </form>
+        <li class="schedule-entry" data-entry-id="{{ schedule_entry.id }}" data-day="{{ day }}"
+            {% if not schedule_entry.food_item %}class="entry-error"{% endif %}>
+            <div class="schedule-entry-top">
+                <span class="schedule-entry-name">
+                {{ schedule_entry.quantity|smart_float }} {{ schedule_entry.unit }}
+                {% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}
+                </span>
+                <div class="schedule-entry-buttons dropdown">
+                    <button class="kebab-toggle">&hellip;</button>
+                    <div class="dropdown-menu">
+                        <button class="edit-schedule-entry" data-id="{{ schedule_entry.id }}">✏️ Edit Schedule</button>
+                        <button class="edit-food-item" data-id="{{ schedule_entry.food_item.id }}">👨‍🍳 Edit Food</button>
+                        <form method="post" action="{% url 'delete_schedule_entry' schedule_entry.id %}" class="delete-schedule-entry-form">
+                        {% csrf_token %}
+                        <button type="submit">🗑️ Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             {% with macros=schedule_entry.macro_totals %}
-                Calories: {{ macros.calories }}
-                Protein: {{ macros.protein }}
-                Fat: {{ macros.fat }}
-                Carbs: {{ macros.carbs }}
+            <div class="schedule-entry-macros macros">
+                <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
+                <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
+                <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
+                <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
+            </div>
             {% endwith %}
         </li>
         {% endfor %}
     </ul>
-    <button class="btn btn-primary" id="create-schedule-entry">
+    <button class="btn btn-primary add-food" id="create-schedule-entry">
         + Add Food 
     </button>
 </div>
