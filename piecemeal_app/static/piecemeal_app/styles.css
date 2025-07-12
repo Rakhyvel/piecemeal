@@ -27,14 +27,15 @@ h6 {
 }
 
 .day-macros {
-    text-align: center;
-    margin-top: 0;
     margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
 }
 
 .day-container h3 {
     text-align: center;
-    margin-top: 0;
     margin-bottom: 16px;
     font-size: 1.5em;
 }
@@ -84,41 +85,31 @@ h6 {
 .schedule-entry-buttons,
 .library-food-item-buttons {
     display: flex;
-    gap: 0.0em;
     flex-shrink: 0;
     position: relative;
-    display: inline-block;
 }
 
 .schedule-entry-macros,
 .library-food-item-macros {
-    margin-top: 0.0em;
     font-size: 0.9em;
     display: flex;
 }
 
-.macro-pill {
-    background-color: #f2f2f2;
-    padding: 0.4em 0.8em;
-    border-radius: 1.2em;
-    font-size: 0.95em;
-    line-height: 1.4;
-    white-space: nowrap;
-}
 
 .macros {
     color: #333;
     flex-wrap: wrap;
     gap: 0.4em;
     display: flex;
+    font-size: 0.9em;
 }
 
 .kebab-toggle {
     background: none;
     border: none;
-    font-size: 1.2em;
+    font-size: 1em;
     cursor: pointer;
-    padding: 0.0em 0.5em;
+    padding: 0 0.5em;
     border-radius: 9999px;
     transition: background 0.2s;
 }
@@ -159,16 +150,6 @@ h6 {
     margin: 0;
 }
 
-.btn {
-    background-color: #FFA45B;
-    border-color: #ad703f;
-}
-
-.btn:hover {
-    background-color: #ad703f;
-    border-color: #684325;
-}
-
 button {
     padding: 0.4em 0.8em;
     font-size: 1em;
@@ -205,8 +186,9 @@ select {
 }
 
 /* Add ingredient button */
+#create-food-item,
+#create-schedule-entry,
 #add-ingredient-row {
-    margin-top: 1.2em;
     background-color: #FFA45B;
     color: white;
     border: none;
@@ -215,45 +197,23 @@ select {
     cursor: pointer;
 }
 
+#add-ingredient-row {
+    margin-top: 1.2em;
+}
+
+#create-food-item:hover,
+#create-schedule-entry:hover,
 #add-ingredient-row:hover {
     background-color: #ff923c;
 }
 
 /* Save/Cancel buttons */
-.create-food-item-form button[type="submit"],
-.create-food-item-form button[data-dismiss="modal"] {
-    padding: 0.5em 1.2em;
-    border: none;
-    border-radius: 1.2em;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.create-food-item-form button[type="submit"] {
-    background-color: #FFA45B;
-    color: white;
-}
-
-.create-food-item-form button[type="submit"]:hover {
-    background-color: #ff923c;
-}
-
-.create-food-item-form button[data-dismiss="modal"] {
-    background-color: #eee;
-    color: #333;
-}
-
-.create-food-item-form button[data-dismiss="modal"]:hover {
-    background-color: #ddd;
-}
 
 .macro-pill {
     background-color: #f4f4f4;
     color: #333;
     padding: 0.4em 0.8em;
     border-radius: 1.2em;
-    font-size: 0.95em;
     display: inline-block;
 }
 
@@ -303,4 +263,56 @@ select {
 
 .remove-row:hover {
     color: #a22;
+}
+
+.create-schedule-entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em;
+}
+
+/* Day checkboxes styled as pills */
+.day-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+}
+
+.day-checkboxes .form-check {
+    padding: 0;
+    margin: 0;
+}
+
+.day-checkboxes .form-check-input {
+    display: none;
+}
+
+.day-checkboxes .form-check-label {
+    background-color: #eee;
+    color: #333;
+    padding: 0.3em 0.6em;
+    border-radius: 1em;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.day-checkboxes .form-check-input:checked+.form-check-label {
+    background-color: #FFA45B;
+    color: white;
+    border-color: #FFA45B;
+}
+
+.form-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+    margin-top: 1em;
+}
+
+.form-action-buttons button {
+    width: 100%;
 }

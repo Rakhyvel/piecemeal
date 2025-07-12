@@ -1,13 +1,15 @@
 <form method="post"
       class="create-schedule-entry-form"
       action="{% if schedule_entry %}{% url action_url_name schedule_entry.id %}{% else %}{% url action_url_name %}{% endif %}">
-    <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off" style="width:4em;" step="any">
-    {% include "piecemeal_app/partials/schedule_entry_form_units.html" %}
-    <input type="text" class="entry-food-name-input"
-        value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">
-    <br>
+    <div class="ingredient-controls">
+        <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off" style="width:4em;" step="any">
+        {% include "piecemeal_app/partials/schedule_entry_form_units.html" %}
+        <input type="text" class="entry-food-name-input"
+            value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">
+    </div>
+
     {% include "piecemeal_app/partials/schedule_entry_form_macros.html" %}
-    <br>
+    
     <div class="day-checkboxes">
     {% for day in days_of_week %}
     <div class="form-check form-check-inline">
@@ -23,8 +25,8 @@
     </div>
     {% endfor %}
     </div>
-    <br><br>
-
-    <button type="submit">Save</button>
-    <button type="button" data-dismiss="modal">Cancel</button>
+    <div class="form-action-buttons">
+        <button type="submit">Save Schedule</button>
+        <button type="button" data-dismiss="modal">Cancel</button>
+    </div>
 </form>

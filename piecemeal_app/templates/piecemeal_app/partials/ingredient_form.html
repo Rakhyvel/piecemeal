@@ -11,6 +11,9 @@
     data-type="ingredient">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save Ingredient</button>
-    <button type="button" data-dismiss="modal">Cancel</button>
+    
+    <div class="form-action-buttons">
+        <button type="submit">Save Ingredient</button>
+        <button type="button" data-dismiss="modal">Cancel</button>
+    </div>
 </form>

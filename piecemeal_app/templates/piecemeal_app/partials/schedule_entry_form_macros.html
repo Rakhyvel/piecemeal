@@ -1,6 +1,7 @@
-<div id="scheudle-entry-macros">
-    Calories: {{ macros.calories }}
-    Protein: {{ macros.protein }}
-    Fats: {{ macros.fats }}
-    Carbs: {{ macros.carbs }}
+{% load format_extras %}
+<div id="scheudle-entry-macros" class="macros">
+    <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
+    <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
+    <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
+    <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
 </div>
