@@ -159,7 +159,7 @@ $(document).on("click", ".edit-food-item", function (e) {
     $(".modal-title").text("Edit Food Item");
     const food_item_id = $(this).data("id");
     $.ajax({
-        url: "/food_item/form/" + food_item_id + "/",
+        url: "food_item/form/" + food_item_id + "/",
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
@@ -174,7 +174,7 @@ $(document).on("click", ".edit-schedule-entry", function (e) {
     $(".modal-title").text("Edit Schedule Entry");
     const entry_id = $(this).data("id");
     $.ajax({
-        url: "/schedule_entry/form/" + entry_id + "/",
+        url: "piecemeal/schedule_entry/form/" + entry_id + "/",
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
@@ -283,7 +283,7 @@ function updateMealMacros() {
     });
 
     $.ajax({
-        url: "/calculate_macros/",
+        url: "{% url 'calculate_macros' %}",
         type: "POST",
         data: JSON.stringify({ ingredients: ingredients }),
         contentType: "application/json",
@@ -305,7 +305,7 @@ function update_schedule_entry_macros() {
     const unit = form.find("select[name='ingredient_unit']").val() ?? "servings";
 
     $.ajax({
-        url: "/calculate_macros_schedule_item/",
+        url: "{% url 'calculate_macros_schedule_item' %}",
         type: "POST",
         data: { name: name, quantity: quantity, unit: unit },
         success: function (response) {
