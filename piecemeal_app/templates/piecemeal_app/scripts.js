@@ -110,6 +110,7 @@ function loadForm(url, data) {
         data: data,
         success: function (data) {
             $("#formContainer").html(data);
+            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
         },
@@ -147,6 +148,8 @@ $(document).on("submit", ".create-food-item-form", function (e) {
                     $(".meal-plan-container").hide();
                 }
                 reloadIngredientNames();
+                setupAutocomplete($(".entry-food-name-input"));
+                setupAutocomplete($(".ingredient_name"));
             }
         },
         error: function (xhr) {
@@ -163,6 +166,7 @@ $(document).on("click", ".edit-food-item", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
+            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
@@ -178,6 +182,7 @@ $(document).on("click", ".edit-schedule-entry", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
+            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
@@ -200,6 +205,8 @@ $(document).on("submit", ".delete-food-item-form", function (e) {
                 $("#library").replaceWith(response.html_library);
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
                 reloadIngredientNames();
+                setupAutocomplete($(".entry-food-name-input"));
+                setupAutocomplete($(".ingredient_name"));
                 if (isLibraryHidden) {
                     $("#library").hide();
                 }
@@ -241,6 +248,8 @@ $(document).on("submit", ".create-schedule-entry-form", function (e) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
                 reloadIngredientNames();
+                setupAutocomplete($(".entry-food-name-input"));
+                setupAutocomplete($(".ingredient_name"));
                 $("#foodItemModal").modal("hide");
             } else {
                 console.log(xhr.responseText);
@@ -263,6 +272,8 @@ $(document).on("submit", ".delete-schedule-entry-form", function (e) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
                 reloadIngredientNames();
+                setupAutocomplete($(".entry-food-name-input"));
+                setupAutocomplete($(".ingredient_name"));
                 $("#foodItemModal").modal("hide");
             }
         },
