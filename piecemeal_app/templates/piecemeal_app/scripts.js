@@ -84,7 +84,7 @@ $(document).on("click", "#create-food-item", function () {
 
 $(document).on("click", "#create-schedule-entry", function () {
     $(".modal-title").text("Add Food Item");
-    loadForm("schedule_entry", {});
+    loadForm("piecemeal/schedule_entry", {});
     $(".modal-title").text("Add Schedule Entry");
     $("#foodItemModal").modal("show");
 });
