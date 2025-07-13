@@ -308,12 +308,37 @@ select {
     width: 100%;
 }
 
+.sticky-add-button {
+    position: fixed;
+    bottom: 2.5em;
+    right: 0.5em;
+    width: 2em;
+    height: 2em;
+    background-color: #FFA45B;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 4rem;
+    line-height: 0.5em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.sticky-add-button:hover {
+    background-color: #ff923c;
+}
+
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 8em;
     background: white;
     border-top: 1px solid #ddd;
     display: flex;
@@ -341,7 +366,7 @@ select {
 }
 
 .nav-item .material-icons {
-    font-size: 1.5em;
+    font-size: 2em;
     line-height: 1;
     margin-bottom: 2px;
 }
