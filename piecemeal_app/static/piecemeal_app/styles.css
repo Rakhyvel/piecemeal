@@ -184,7 +184,6 @@ input[type="number"] {
 
 select {
     font-size: 4em;
-    height: 6em;
 }
 
 /* Add ingredient button */
@@ -245,12 +244,12 @@ select {
 }
 
 .ingredient-controls select {
-    min-width: 5em;
+    min-width: 1em;
 }
 
 .ingredient-controls input[type="text"] {
     flex: 1;
-    min-width: 10em;
+    min-width: 3em;
 }
 
 .modal-dialog {
