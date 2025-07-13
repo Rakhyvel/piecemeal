@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-q=tnpax(-+xa*k873+ct5ow8x&cn(v__168bm-j%!#ctx5n(yk"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['josephs-projects.com', '143.110.233.167']
 
 
 # Application definition
@@ -40,8 +42,8 @@ INSTALLED_APPS = [
     "piecemeal_app",
 ]
 
-LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/piecemeal/login/"
+LOGIN_REDIRECT_URL = "/piecemeal/"
 LOGOUT_REDIRECT_URL = "/login/"
 
 MIDDLEWARE = [
@@ -119,7 +121,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/piecemeal/staticfiles/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+FORCE_SCRIPT_NAME = '/piecemeal'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
