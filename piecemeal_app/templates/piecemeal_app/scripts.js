@@ -113,8 +113,8 @@ function loadForm(url, data) {
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
         },
-        error: function () {
-            $("#formContainer").html("<p>Error loading form. Please try again.</p>");
+        error: function (xhr) {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 }
