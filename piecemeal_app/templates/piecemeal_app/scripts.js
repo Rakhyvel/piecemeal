@@ -159,7 +159,7 @@ $(document).on("click", ".edit-food-item", function (e) {
     $(".modal-title").text("Edit Food Item");
     const food_item_id = $(this).data("id");
     $.ajax({
-        url: "food_item/form/" + food_item_id + "/",
+        url: "piecemeal/food_item/form/" + food_item_id + "/",
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);

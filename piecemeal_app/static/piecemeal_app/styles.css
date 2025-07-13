@@ -239,8 +239,8 @@ select {
 }
 
 .ingredient-controls input[type="number"] {
-    width: 6em;
-    min-width: 6em;
+    width: 3em;
+    min-width: 3em;
 }
 
 .ingredient-controls select {
