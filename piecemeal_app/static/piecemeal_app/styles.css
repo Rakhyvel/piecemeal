@@ -245,7 +245,7 @@ select {
 }
 
 .ingredient-controls select {
-    min-width: 0em;
+    min-width: 5em;
 }
 
 .ingredient-controls input[type="text"] {
