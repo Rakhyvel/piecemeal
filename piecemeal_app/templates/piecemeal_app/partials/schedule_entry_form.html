@@ -18,7 +18,7 @@
             name="days"
             value="{{ day }}"
             id="day-{{ day|lower }}"
-            {% if day in schedule_entry.days %}checked{% endif %}>
+            {% if not schedule_entry or day in schedule_entry.days %}checked{% endif %}>
         <label class="form-check-label" for="day-{{ day|lower }}">
         {{ day|slice:":2" }}
         </label>
