@@ -36,12 +36,17 @@ $(document).ready(function () {
     $("#profile").hide()
     $(".meal-plan-container").show()
     $("#library").hide()
+    $("#create-schedule-entry").show();
+    $("#create-food-item").hide();
 })
 
 $(document).on("click", "#profile-tab-btn", function () {
     $("#profile").show()
     $(".meal-plan-container").hide()
     $("#library").hide()
+
+    $("#create-schedule-entry").hide();
+    $("#create-food-item").hide();
 
     $('#profile-tab-btn').removeClass('active')
     $('#meal-plan-tab-btn').removeClass('active')
@@ -55,6 +60,9 @@ $(document).on("click", "#meal-plan-tab-btn", function () {
     $(".meal-plan-container").show()
     $("#library").hide()
 
+    $("#create-schedule-entry").show();
+    $("#create-food-item").hide();
+
     $('#profile-tab-btn').removeClass('active')
     $('#meal-plan-tab-btn').removeClass('active')
     $('#library-tab-btn').removeClass('active')
@@ -66,6 +74,9 @@ $(document).on("click", "#library-tab-btn", function () {
     $("#profile").hide()
     $(".meal-plan-container").hide()
     $("#library").show()
+
+    $("#create-schedule-entry").hide();
+    $("#create-food-item").show();
 
     $('#profile-tab-btn').removeClass('active')
     $('#meal-plan-tab-btn').removeClass('active')
@@ -341,7 +352,7 @@ decodeHTMLEntities("{{ ingredient.name }}"),
 
 function reloadIngredientNames() {
     ingredientNames = [];
-    $("#library .ingredient-name").each(function () {
+    $("#library .ingredient-name-autocomplete").each(function () {
         var encodedName = $(this).text().trim();
         var decodedName = decodeHTMLEntities(encodedName);
         if (decodedName && !ingredientNames.includes(decodedName)) {

@@ -1,14 +1,11 @@
 {% load dict_extras %}
 {% load format_extras %}
 <div id="library" class="day-container">
-    <button class="btn btn-primary" id="create-food-item">
-        + New Food Item
-    </button>
     <ul>
         {% for food_item in food_items %}
         <li class="library-food-item">
             <div class="library-food-item-top">
-                <span class="library-food-item-name ingredient-name">{{ food_item.quantity|smart_float }} {{ food_item.unit }} {{ food_item.name }}</span>
+                <span class="library-food-item-name ingredient-name">{{ food_item.quantity|smart_float }} {{ food_item.unit }} <span class="ingredient-name-autocomplete">{{ food_item.name }}</span></span>
                 <div class="library-food-item-buttons dropdown">
                     <button class="kebab-toggle">&hellip;</button>
                     <div class="dropdown-menu">
