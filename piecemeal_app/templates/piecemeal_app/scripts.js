@@ -78,7 +78,7 @@ $(document).on("click", "#create-food-item", function () {
     $(".modal-title").text("Add Food Item");
     $("#toggleFormSwitch").prop("checked", true);
     $("#toggleLabel").text("Add Ingredient");
-    loadForm("food_item", { is_meal: true });
+    loadForm("piecemeal/food_item", { is_meal: true });
     $("#foodItemModal").modal("show");
 });
 
@@ -93,10 +93,10 @@ $(document).on("click", "#create-schedule-entry", function () {
 $(document).on("change", "#toggleFormSwitch", function () {
     if ($(this).is(":checked")) {
         $("#toggleLabel").text("Add Meal");
-        loadForm("food_item", { is_meal: true });
+        loadForm("piecemeal/food_item", { is_meal: true });
     } else {
         $("#toggleLabel").text("Add Ingredient");
-        loadForm("food_item", { is_meal: false });
+        loadForm("piecemeal/food_item", { is_meal: false });
     }
 });
 
