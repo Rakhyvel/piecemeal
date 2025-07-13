@@ -12,4 +12,4 @@ def smart_float(value):
 
     if abs(num - round(num)) < 0.01:
         return f"{int(round(num))}"
-    return f"{num:.2f}"
+    return f"{num:.1f}"

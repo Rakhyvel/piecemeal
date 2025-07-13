@@ -8,9 +8,10 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'piecemeal_app/styles.css' %}?v={{ timestamp }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <style>
         .ui-autocomplete {
-            z-index: 2000 !important;
+            z-index: 200000 !important;
         }
 
         .entry-error {
@@ -27,13 +28,6 @@
 </head>
 
 <body>
-    <h1>Hello, {{ user.username }}</h1>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-    <button id="meal-plan-tab-btn">Meal Plan</button>
-    <button id="library-tab-btn">Library</button>
 
     <!-- Modal container -->
     <div class="modal fade" id="foodItemModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -57,6 +51,22 @@
 
     {% include "piecemeal_app/partials/library.html" %}
     {% include "piecemeal_app/partials/meal_plan.html" %}
+    {% include "piecemeal_app/partials/profile.html" %}
+
+    <nav class="bottom-nav">
+    <button class="nav-item" aria-label="Profile" id="profile-tab-btn">
+        <span class="material-icons">account_circle</span>
+        <span class="nav-label">Profile</span>
+    </button>
+    <button class="nav-item active" aria-label="Home" id="meal-plan-tab-btn">
+        <span class="material-icons">home</span>
+        <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" aria-label="Pantry" id="library-tab-btn">
+        <span class="material-icons">kitchen</span>
+        <span class="nav-label">Pantry</span>
+    </button>
+    </nav>
 
     <!-- JavaScript includes and inline script -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

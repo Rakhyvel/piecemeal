@@ -16,6 +16,7 @@ h6 {
     font-family: 'Quicksand', sans-serif;
 }
 
+#profile,
 .day-container {
     max-width: 600px;
     margin: 20px auto;
@@ -315,4 +316,54 @@ select {
 
 .form-action-buttons button {
     width: 100%;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    flex: 1;
+    height: 100%;
+    transition: color 0.3s;
+}
+
+.nav-item .material-icons {
+    font-size: 24px;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.nav-item.active {
+    color: #FFA45B;
+    font-weight: 600;
+    border-top: 3px solid #FFA45B;
+    background: #fff7e6;
+}
+
+.nav-item:focus-visible {
+    outline: 2px solid #FFA45B;
+    outline-offset: 2px;
 }

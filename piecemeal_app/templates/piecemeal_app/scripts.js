@@ -33,18 +33,45 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
+    $("#profile").hide()
     $(".meal-plan-container").show()
     $("#library").hide()
+})
+
+$(document).on("click", "#profile-tab-btn", function () {
+    $("#profile").show()
+    $(".meal-plan-container").hide()
+    $("#library").hide()
+
+    $('#profile-tab-btn').removeClass('active')
+    $('#meal-plan-tab-btn').removeClass('active')
+    $('#library-tab-btn').removeClass('active')
+
+    $('#profile-tab-btn').addClass('active')
 })
 
 $(document).on("click", "#meal-plan-tab-btn", function () {
+    $("#profile").hide()
     $(".meal-plan-container").show()
     $("#library").hide()
+
+    $('#profile-tab-btn').removeClass('active')
+    $('#meal-plan-tab-btn').removeClass('active')
+    $('#library-tab-btn').removeClass('active')
+
+    $('#meal-plan-tab-btn').addClass('active')
 })
 
 $(document).on("click", "#library-tab-btn", function () {
+    $("#profile").hide()
     $(".meal-plan-container").hide()
     $("#library").show()
+
+    $('#profile-tab-btn').removeClass('active')
+    $('#meal-plan-tab-btn').removeClass('active')
+    $('#library-tab-btn').removeClass('active')
+
+    $('#library-tab-btn').addClass('active')
 })
 
 $(document).on("click", "#create-food-item", function () {
@@ -83,6 +110,8 @@ function loadForm(url, data) {
         data: data,
         success: function (data) {
             $("#formContainer").html(data);
+            setupAutocomplete($(".entry-food-name-input"));
+            setupAutocomplete($(".ingredient_name"));
         },
         error: function () {
             $("#formContainer").html("<p>Error loading form. Please try again.</p>");
@@ -134,6 +163,8 @@ $(document).on("click", ".edit-food-item", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
+            setupAutocomplete($(".entry-food-name-input"));
+            setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
         }
     });
@@ -147,6 +178,8 @@ $(document).on("click", ".edit-schedule-entry", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
+            setupAutocomplete($(".entry-food-name-input"));
+            setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
         }
     });
@@ -245,7 +278,7 @@ function updateMealMacros() {
     $("#ingredient-rows .ingredient-row").each(function () {
         const name = $(this).find(".ingredient-name").val();
         const quantity = $(this).find("input[name='ingredient_quantity']").val();
-        const unit = $(document).find("select[name='ingredient_unit']").val();
+        const unit = $(this).find("select[name='ingredient_unit']").val();
         ingredients.push({ name: name, quantity: quantity, unit: unit });
     });
 
@@ -262,13 +295,14 @@ function updateMealMacros() {
     });
 }
 $(document).on("blur", "#ingredient-rows input", updateMealMacros);
+$(document).on("change", "#ingredient-rows input", updateMealMacros);
 $(document).on("change", "#ingredient-rows select", updateMealMacros);
 
 function update_schedule_entry_macros() {
     const form = $(this).closest("form");
     const name = form.find(".entry-food-name-input").val();
     const quantity = form.find(".entry-quantity-input").val();
-    const unit = $(document).find("select[name='ingredient_unit']").val() ?? "servings";
+    const unit = form.find("select[name='ingredient_unit']").val() ?? "servings";
 
     $.ajax({
         url: "/calculate_macros_schedule_item/",
@@ -284,6 +318,7 @@ function update_schedule_entry_macros() {
     });
 }
 $(document).on("blur", ".create-schedule-entry-form input", update_schedule_entry_macros);
+$(document).on("change", ".create-schedule-entry-form input", update_schedule_entry_macros);
 $(document).on("change", ".create-schedule-entry-form select", update_schedule_entry_macros);
 
 // Meal ingredient row shit
