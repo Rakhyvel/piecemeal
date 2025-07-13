@@ -48,6 +48,11 @@ h6 {
     display: inline;
 }
 
+.ingredients {
+    margin: 1em;
+    background-color: red;
+}
+
 .schedule-entry,
 .library-food-item {
     display: flex;
