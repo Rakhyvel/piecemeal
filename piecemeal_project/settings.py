@@ -148,10 +148,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 if DEBUG:
+    URL_PREFIX = "piecemeal/"
     STATIC_URL = "/static/"
     STATICFILES_DIRS = [BASE_DIR / "piecemeal_app" / "static"]
     FORCE_SCRIPT_NAME = None
 else:
+    URL_PREFIX = ""
     STATIC_URL = "/piecemeal/staticfiles/"
     STATIC_ROOT = BASE_DIR / "staticfiles"
     FORCE_SCRIPT_NAME = "/piecemeal"
