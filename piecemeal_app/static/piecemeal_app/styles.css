@@ -170,16 +170,21 @@ button:hover {
 
 /* Input and select styling */
 input[type="text"],
-input[type="number"],
-select {
-    padding: 0.4em 0.8em;
-    font-size: 1.5em;
+input[type="number"] {
+    font-size: 2em;
+    padding: 0.6em 1em;
+    height: auto;
     border: 1px solid #ccc;
     border-radius: 1.2em;
-    height: 2.4em;
+    appearance: none;
     box-sizing: border-box;
     background-color: white;
     appearance: none;
+}
+
+select {
+    font-size: 4em;
+    height: 6em;
 }
 
 /* Add ingredient button */
@@ -280,6 +285,7 @@ select {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4em;
+    font-size: 1.5em;
 }
 
 .day-checkboxes .form-check {
