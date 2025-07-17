@@ -224,7 +224,13 @@ def create_food_item(request):
             }
         )
 
-    return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    errors = list(form.errors.keys())
+    return JsonResponse(
+        {
+            "success": False,
+            "field_errors": errors,
+        }
+    )
 
 
 @require_POST
@@ -254,7 +260,13 @@ def edit_food_item(request, food_item_pk):
             }
         )
 
-    return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    errors = list(form.errors.keys())
+    return JsonResponse(
+        {
+            "success": False,
+            "field_errors": errors,
+        }
+    )
 
 
 @require_POST

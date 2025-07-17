@@ -170,6 +170,10 @@ button:hover {
     margin-bottom: 1.0em;
 }
 
+.invalid {
+    border: 2px solid #FF6B6B !important;
+}
+
 /* Input and select styling */
 input[type="text"],
 input[type="number"] {
@@ -182,6 +186,10 @@ input[type="number"] {
     box-sizing: border-box;
     background-color: white;
     appearance: none;
+}
+
+.form-group input[type="number"] {
+    width: 6em !important;
 }
 
 select {

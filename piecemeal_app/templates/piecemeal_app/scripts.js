@@ -161,6 +161,14 @@ $(document).on("submit", ".create-food-item-form", function (e) {
                 reloadIngredientNames();
                 setupAutocomplete($(".entry-food-name-input"));
                 setupAutocomplete($(".ingredient_name"));
+            } else {
+                // clear all invalids, so they don't accumulate
+                $("input, select").removeClass("invalid");
+
+                // set all invalid fields to be invalid
+                response.field_errors.forEach(function (fieldName) {
+                    $(`[name="${fieldName}"]`).addClass("invalid");
+                });
             }
         },
         error: function (xhr) {
@@ -342,6 +350,10 @@ function update_schedule_entry_macros() {
 $(document).on("blur", ".create-schedule-entry-form input", update_schedule_entry_macros);
 $(document).on("change", ".create-schedule-entry-form input", update_schedule_entry_macros);
 $(document).on("change", ".create-schedule-entry-form select", update_schedule_entry_macros);
+
+$(document).on('input change', 'input.invalid, select.invalid, textarea.invalid', function () {
+    $(this).removeClass('invalid');
+});
 
 // Meal ingredient row shit
 var ingredientNames = [

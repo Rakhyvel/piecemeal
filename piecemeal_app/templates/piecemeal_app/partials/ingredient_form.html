@@ -9,8 +9,44 @@
     class="create-food-item-form" 
     action="{% if food_item %}{% url action_url_name food_item.id %}{% else %}{% url action_url_name %}{% endif %}" 
     data-type="ingredient">
-    {% csrf_token %}
-    {{ form.as_p }}
+
+    <div class="ingredient-controls">
+        <input type="number" id="id_quantity" name="quantity" class="{% if form.quantity.errors %} invalid{% endif %}" 
+            value="{{ food_item.quantity }}" step="0.1" style="width:4em;">
+        <select id="id_unit" name="unit" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
+            {% for group_label, options in form.fields.unit.choices %}
+            <optgroup label="{{ group_label }}">
+                {% for value, label in options %}
+                <option value="{{ value }}" {% if food_item.unit.value == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </optgroup>
+            {% endfor %}
+        </select>
+        <input type="text" id="id_name" name="name" class="ingredient-name{% if form.name.errors %} invalid{% endif %}" 
+            value="{{ food_item.name }}" placeholder="Ingredient name">
+    </div>
+
+    <div class="form-group">
+        <label for="id_calories">Calories: </label>
+        <input type="number" id="id_calories" name="calories" value="{{ food_item.calories }}" step="0.1" style="width:4em;">
+    </div>
+
+    <div class="form-group">
+        <label for="id_protein">Protein: </label>
+        <input type="number" id="id_protein" name="protein" value="{{ food_item.protein }}" step="0.1" style="width:4em;">
+    </div>
+
+    <div class="form-group">
+        <label for="id_fats">Fats: </label>
+        <input type="number" id="id_fats" name="fats" value="{{ food_item.fats }}" step="0.1" style="width:4em;">
+    </div>
+
+    <div class="form-group">
+        <label for="id_carbs">Carbs: </label>
+        <input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs }}" step="0.1" style="width:4em;">
+    </div>
     
     <div class="form-action-buttons">
         <button type="submit">Save Ingredient</button>
