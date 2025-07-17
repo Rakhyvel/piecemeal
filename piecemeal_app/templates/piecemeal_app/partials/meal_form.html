@@ -9,7 +9,8 @@
     action="{% if food_item %}{% url action_url_name food_item.id %}{% else %}{% url action_url_name %}{% endif %}" 
     data-type="meal">
     
-    {{ form.as_p }}
+    <input type="text" id="id_name" name="name" class="{% if form.name.errors %}invalid{% endif %}" 
+        value="{{ food_item.name }}" placeholder="Meal name">
 
     {% include "piecemeal_app/partials/meal_ingredients_list.html" %}
 

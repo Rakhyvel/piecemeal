@@ -1,5 +1,6 @@
 {% load format_extras %}
 <div class="ingredient-row">
+    <div>{{i}}</div>
     <div class="ingredient-controls">
         <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity }}" step="0.1" style="width:4em;">
         <select name="ingredient_unit" class="form-select unit-select">

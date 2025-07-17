@@ -66,8 +66,12 @@ class MealForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
-class ScheduleEntryForm(forms.ModelForm):
-    class Meta:
-        model = ScheduleEntry
-        fields = ["quantity"]
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if not self.instance.pk:
+            try:
+                FoodItem.objects.get(name=name)
+                raise forms.ValidationError("Duplicate name detected.")
+            except FoodItem.DoesNotExist:
+                pass
+        return name

@@ -32,6 +32,8 @@
     </div>
 
     {% for ingredient in ingredients %}
+    {% with i=forloop.counter0 %}
     {% include "piecemeal_app/partials/meal_ingredient_item.html" %}
+    {% endwith %}
     {% endfor %}
 </div>

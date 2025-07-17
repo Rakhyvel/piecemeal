@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from .forms import IngredientForm, MealForm, ScheduleEntryForm
+from .forms import IngredientForm, MealForm
 from datetime import datetime
 from .models import (
     FoodItem,
