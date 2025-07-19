@@ -486,10 +486,20 @@ def grocery_list(request):
 @require_GET
 def autocomplete(request):
     term = request.GET.get("term", "")
-    results = FoodItem.objects.filter(name__icontains=term)[:20]
+    own_results = FoodItem.objects.filter(name__icontains=term, owner=request.user)[:20]
+    shared_results = FoodItem.objects.filter(
+        name__icontains=term, is_public=True
+    ).exclude(owner=request.user)[:20]
 
     data = []
-    for item in results:
+    for item in own_results:
+        data.append(
+            {
+                "label": f"{item.name}",
+                "value": item.name,
+            }
+        )
+    for item in shared_results:
         data.append(
             {
                 "label": f"{item.name} <em>by {item.owner.username}</em>",
