@@ -110,7 +110,7 @@ class FoodItem(models.Model):
     carbs = models.FloatField(default=0)
     fats = models.FloatField(default=0)
 
-    aisle = MultiSelectField(choices=AISLES)
+    aisle = MultiSelectField(choices=AISLES, default="other")
 
     def macro_totals(self):
         if not self.is_meal:
