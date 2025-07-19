@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -481,3 +481,20 @@ def grocery_list(request):
         {"categories": categories},
     )
     return JsonResponse({"success": True, "html_grocery_list": html_grocery_list})
+
+
+@require_GET
+def autocomplete(request):
+    term = request.GET.get("term", "")
+    results = FoodItem.objects.filter(name__icontains=term)[:20]
+
+    data = []
+    for item in results:
+        data.append(
+            {
+                "label": f"{item.name} <em>by {item.owner.username}</em>",
+                "value": item.name,
+            }
+        )
+
+    return JsonResponse(data, safe=False)

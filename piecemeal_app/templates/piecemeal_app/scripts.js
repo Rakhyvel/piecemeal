@@ -418,8 +418,33 @@ function reloadIngredientNames() {
 
 function setupAutocomplete(input) {
     $(input).autocomplete({
-        source: ingredientNames
+        source: (req, res) => {
+            console.log('hi!')
+            $.ajax({
+                url: "piecemeal/autocomplete/",
+                data: {
+                    term: req.term
+                },
+                success: (data) => {
+                    res(data)
+                }
+            })
+        },
+        focus: (event, ui) => {
+            event.preventDefault()
+            $(this).val(ui.item.value)
+        },
+        select: (event, ui) => {
+            event.preventDefault()
+            $(this).val(ui.item.value)
+        }
     });
+
+    $(input).autocomplete("instance")._renderItem = (ul, item) => {
+        return $("<li>").append(
+            `<div>${item.label}</div>`
+        ).appendTo(ul)
+    }
 }
 
 // Add new ingredient rows

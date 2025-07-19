@@ -67,4 +67,5 @@ urlpatterns = [
         name="calculate_macros_schedule_item",
     ),
     path("piecemeal/grocery_list/", views.grocery_list, name="grocery_list"),
+    path("piecemeal/autocomplete/", views.autocomplete, name="autocomplete"),
 ]
