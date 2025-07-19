@@ -14,6 +14,7 @@ class IngredientForm(forms.ModelForm):
             "quantity",
             "unit",
             "name",
+            "is_public",
             "aisle",
             "calories",
             "protein",
@@ -70,7 +71,7 @@ class MealForm(forms.ModelForm):
 
     class Meta:
         model = FoodItem
-        fields = ["name", "makes"]
+        fields = ["name", "makes", "is_public"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

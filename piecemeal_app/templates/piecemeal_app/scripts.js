@@ -369,6 +369,7 @@ function updateMealMacros() {
 $(document).on("blur", "#ingredient-rows input", updateMealMacros);
 $(document).on("change", "#ingredient-rows input", updateMealMacros);
 $(document).on("change", "#ingredient-rows select", updateMealMacros);
+$(document).on("change", "#id_makes", updateMealMacros);
 
 function update_schedule_entry_macros() {
     const form = $(this).closest("form");
