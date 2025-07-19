@@ -139,7 +139,9 @@ class FoodItem(models.Model):
                 # 1000 g = ? cal
                 # 1000 g = (1000 / 50) * 100 cal
                 factor = (
-                    float(entry.quantity) * unit_conversion_factor / food_item_quantity
+                    float(entry.quantity)
+                    * unit_conversion_factor
+                    / (food_item_quantity * self.makes)
                 )
                 for k in total:
                     total[k] += child_macros[k] * factor
@@ -165,7 +167,7 @@ class FoodItem(models.Model):
                     "name": entry.item.name,
                     "quantity": entry.quantity,
                     "macros": entry.item.get_macros_adjusted_with_unit(
-                        entry.quantity, entry.unit
+                        entry.quantity / self.makes, entry.unit
                     ),
                     "unit": entry.unit,
                     "compatible_units": get_compatible_units(entry.item.unit),
@@ -183,7 +185,9 @@ class FoodItem(models.Model):
         else:
             for entry in self.entries.all():
                 entry.item.furnish_grocery_list(
-                    grocery_list, factor * quantity * entry.quantity, entry.unit
+                    grocery_list,
+                    factor * quantity * entry.quantity / self.makes,
+                    entry.unit,
                 )
 
     def get_compatible_choices(self):
@@ -203,10 +207,15 @@ class FoodItem(models.Model):
         return macros
 
 
-def sum_total_macros(user, ingredients: list[dict]) -> dict:
+def sum_total_macros(user, ingredients: list[dict], makes: float) -> dict:
     total = EMPTY_MACROS.copy()
     for ingredient in ingredients:
-        food_item = FoodItem.objects.get(name__iexact=ingredient["name"], owner=user)
+        try:
+            food_item = FoodItem.objects.get(
+                name__iexact=ingredient["name"], owner=user
+            )
+        except FoodItem.DoesNotExist:
+            continue
         food_item_unit = food_item.unit
         food_item_quantity = food_item.quantity
         ingredient_unit = ingredient["unit"]
@@ -219,7 +228,9 @@ def sum_total_macros(user, ingredients: list[dict]) -> dict:
         # 1000 g = ? cal
         # 1000 g = (1000 / 50) * 100 cal
         factor = (
-            float(ingredient["quantity"]) * unit_conversion_factor / food_item_quantity
+            float(ingredient["quantity"])
+            * unit_conversion_factor
+            / (food_item_quantity * makes)
         )
         for k in total:
             total[k] += child_macros[k] * factor

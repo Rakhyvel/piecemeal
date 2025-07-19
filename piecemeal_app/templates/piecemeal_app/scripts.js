@@ -114,7 +114,7 @@ $(document).on("click", "#show-grocery-list", () => {
         },
         error: (xhr) => {
             $("#formContainer").html(`${xhr.responseText}`);
-        },
+        }
     })
 
     $("#foodItemModal").modal("show");
@@ -162,7 +162,7 @@ function loadForm(url, data) {
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
         },
-        error: function (xhr) {
+        error: (xhr) => {
             $("#formContainer").html(`${xhr.responseText}`);
         }
     });
@@ -207,8 +207,8 @@ $(document).on("submit", ".create-food-item-form", function (e) {
                 });
             }
         },
-        error: function (xhr) {
-            $("#formContainer").html(xhr.responseText);
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 });
@@ -270,8 +270,8 @@ $(document).on("submit", ".delete-food-item-form", function (e) {
                 }
             }
         },
-        error: function (xhr) {
-            alert("An error occurred removing the meal.");
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 });
@@ -310,8 +310,8 @@ $(document).on("submit", ".create-schedule-entry-form", function (e) {
                 console.log(xhr.responseText);
             }
         },
-        error: function (xhr) {
-            $("#formContainer").html(xhr.responseText);
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 });
@@ -332,8 +332,8 @@ $(document).on("submit", ".delete-schedule-entry-form", function (e) {
                 $("#foodItemModal").modal("hide");
             }
         },
-        error: function (xhr) {
-            alert("An error occurred removing the meal.");
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 });
@@ -347,16 +347,22 @@ function updateMealMacros() {
         const unit = $(this).find("select[name='ingredient_unit']").val();
         ingredients.push({ name: name, quantity: quantity, unit: unit });
     });
+    const makes = $("#id_makes").val();
 
     $.ajax({
         url: "{% url 'calculate_macros' %}",
         type: "POST",
-        data: JSON.stringify({ ingredients: ingredients }),
+        data: JSON.stringify({ ingredients: ingredients, makes: makes }),
         contentType: "application/json",
         success: function (response) {
             if (response.success) {
                 $("#ingredient-rows").replaceWith(response.html_meal_ingredients_list);
+            } else {
+                console.log(response);
             }
+        },
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
         }
     });
 }

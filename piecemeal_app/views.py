@@ -89,7 +89,7 @@ def get_food_item_form(request, food_item_pk=None):
         is_meal = food_item.is_meal
         ingredients = food_item.get_ingredients()
         compatible_unit_choices = food_item.get_compatible_choices()
-        macros = sum_total_macros(request.user, ingredients)
+        macros = sum_total_macros(request.user, ingredients, food_item.makes)
         action_url_name = "edit_food_item"
     else:
         is_meal = request.GET.get("is_meal") == "true"
@@ -385,7 +385,7 @@ def delete_schedule_entry(request, pk):
 @require_POST
 @login_required
 def calculate_macros(request):
-    def decorate_with_macros(ingredients):
+    def decorate_with_macros(ingredients, makes):
         for ingredient in ingredients:
             try:
                 try:
@@ -400,7 +400,7 @@ def calculate_macros(request):
                 if unit not in compatible_units:
                     unit = compatible_units[0]
                 ingredient["macros"] = food_item.get_macros_adjusted_with_unit(
-                    quantity, unit
+                    quantity / makes, unit
                 )
                 ingredient["unit"] = unit
                 ingredient["compatible_units"] = compatible_units
@@ -409,8 +409,9 @@ def calculate_macros(request):
 
     data = json.loads(request.body)
     ingredients = data.get("ingredients", [])
-    decorate_with_macros(ingredients)
-    macros = sum_total_macros(request.user, ingredients)
+    makes = float(data.get("makes", 1))
+    decorate_with_macros(ingredients, makes)
+    macros = sum_total_macros(request.user, ingredients, makes)
     html_meal_ingredients_list = render_to_string(
         "piecemeal_app/partials/meal_ingredients_list.html",
         {
