@@ -1,8 +1,9 @@
+{% load format_extras %}
 <form method="post"
       class="create-schedule-entry-form"
       action="{% if schedule_entry %}{% url action_url_name schedule_entry.id %}{% else %}{% url action_url_name %}{% endif %}">
     <div class="ingredient-controls">
-        <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity }}" autocomplete="off" style="width:4em;" step="any">
+        <input type="number" class="entry-quantity-input" value="{{ schedule_entry.quantity|smart_float }}" autocomplete="off" style="width:4em;" step="any">
         {% include "piecemeal_app/partials/schedule_entry_form_units.html" %}
         <input type="text" class="entry-food-name-input"
             value="{% if schedule_entry.food_item %}{{ schedule_entry.food_item.name }}{% endif %}" autocomplete="off">

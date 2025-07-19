@@ -185,7 +185,6 @@ $(document).on("submit", ".create-food-item-form", function (e) {
         data: $.param(formData),
         success: function (response) {
             if (response.success) {
-                const day = response.day;
                 $("#library").replaceWith(response.html_library);
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
                 $("#foodItemModal").modal("hide");

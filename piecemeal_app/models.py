@@ -93,24 +93,27 @@ AISLES = [
 ]
 
 
-# Stores macros directly
+# a food item can be either an ingredient (direct macros) or a meal (list of MealEntry's, macros summed)
 class FoodItem(models.Model):
+    # both ingredient and meal fields
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="food_items")
-
     quantity = models.FloatField(default=0)
     unit = models.CharField(
         max_length=10,
         choices=[(val, label) for _, group in UNIT_CHOICES for val, label in group],
     )
-
     is_meal = models.BooleanField(default=False)
+
+    # ingredient specific fields
     calories = models.FloatField(default=0)
     protein = models.FloatField(default=0)
     carbs = models.FloatField(default=0)
     fats = models.FloatField(default=0)
-
     aisle = MultiSelectField(choices=AISLES, default="other")
+
+    # meal specific fields
+    makes = models.FloatField(default=1.0)
 
     def macro_totals(self):
         if not self.is_meal:

@@ -70,7 +70,7 @@ class MealForm(forms.ModelForm):
 
     class Meta:
         model = FoodItem
-        fields = ["name"]
+        fields = ["name", "makes"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,3 +84,9 @@ class MealForm(forms.ModelForm):
             except FoodItem.DoesNotExist:
                 pass
         return name
+
+    def clean_makes(self):
+        makes = self.cleaned_data.get("makes")
+        if makes is None or makes <= 0:
+            raise forms.ValidationError(f"Servings made must be a non-negative number.")
+        return makes

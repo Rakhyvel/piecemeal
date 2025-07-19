@@ -1,3 +1,4 @@
+{% load format_extras %}
 {% if not food_item %}
 <div class="form-check form-switch mb-3">
 <input class="form-check-input" type="checkbox" id="toggleFormSwitch" >
@@ -12,7 +13,7 @@
 
     <div class="ingredient-controls">
         <input type="number" id="id_quantity" name="quantity" class="{% if form.quantity.errors %} invalid{% endif %}" 
-            value="{{ food_item.quantity }}" step="0.1" style="width:4em;">
+            value="{{ food_item.quantity|smart_float }}" step="0.1" style="width:4em;">
         <select id="id_unit" name="unit" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
             {% for group_label, options in compatible_unit_choices %}
             <optgroup label="{{ group_label }}">
@@ -30,29 +31,29 @@
 
     <div class="form-group">
         <label for="id_calories">Calories: </label>
-        <input type="number" id="id_calories" name="calories" value="{{ food_item.calories }}" step="0.1" style="width:4em;">
+        <input type="number" id="id_calories" name="calories" value="{{ food_item.calories|smart_float }}" step="0.1" style="width:4em;">
     </div>
 
     <div class="form-group">
         <label for="id_protein">Protein: </label>
-        <input type="number" id="id_protein" name="protein" value="{{ food_item.protein }}" step="0.1" style="width:4em;">
+        <input type="number" id="id_protein" name="protein" value="{{ food_item.protein|smart_float }}" step="0.1" style="width:4em;">
     </div>
 
     <div class="form-group">
         <label for="id_fats">Fats: </label>
-        <input type="number" id="id_fats" name="fats" value="{{ food_item.fats }}" step="0.1" style="width:4em;">
+        <input type="number" id="id_fats" name="fats" value="{{ food_item.fats|smart_float }}" step="0.1" style="width:4em;">
     </div>
 
     <div class="form-group">
         <label for="id_carbs">Carbs: </label>
-        <input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs }}" step="0.1" style="width:4em;">
+        <input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs|smart_float }}" step="0.1" style="width:4em;">
     </div>
 
     <div class="form-group">
         <label for="id_aisle">Aisle: </label>
         <select id="id_aisle" name="aisle" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
             {% for value, label in aisles %}
-            <option value="{{ value }}" {% if food_item.aisle == value %}selected{% endif %}>
+            <option value="{{ value }}" {% if food_item.aisle.0 == value %}selected{% endif %}>
                 {{ label }}
             </option>
             {% endfor %}
