@@ -1,6 +1,7 @@
 body {
     background-color: #F9F9F9;
     font-family: 'Inter', sans-serif;
+    padding-bottom: 4em;
 }
 
 h1,
@@ -353,11 +354,17 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .sticky-add-button:hover {
     background-color: #ff923c;
+}
+
+.sticky-add-button.hide {
+    transform: scale(0.8);
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .bottom-nav {

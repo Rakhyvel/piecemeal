@@ -93,11 +93,26 @@ $(document).on("click", "#create-food-item", function () {
     $("#foodItemModal").modal("show");
 });
 
-$(document).on("click", "#create-schedule-entry", function () {
+$(document).on("click", "#create-schedule-entry", () => {
     $(".modal-title").text("Add Food Item");
     loadForm("piecemeal/schedule_entry", {});
     $(".modal-title").text("Add Schedule Entry");
     $("#foodItemModal").modal("show");
+});
+
+let lastScroll = 0;
+window.addEventListener("scroll", () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll > lastScroll + 5) {
+        $("#create-schedule-entry").addClass("hide")
+        $("#create-food-item").addClass("hide")
+    } else if (currentScroll < lastScroll - 5) {
+        $("#create-schedule-entry").removeClass("hide")
+        $("#create-food-item").removeClass("hide")
+    }
+
+    lastScroll = currentScroll <= 0 ? 0 : currentScroll
 });
 
 // When user toggles between forms
