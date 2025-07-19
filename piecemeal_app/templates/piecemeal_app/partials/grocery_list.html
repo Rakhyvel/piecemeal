@@ -1,0 +1,8 @@
+{% load format_extras %}
+<div>
+    <ul class="grocery-list">
+    {% for name, info in grocery_list.items %}
+    <li><input type="checkbox"> {{ info.quantity|smart_float }} {{ info.unit }} {{ name }}</li>
+    {% endfor %}
+    </ul>
+</div>

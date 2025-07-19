@@ -13,6 +13,7 @@ from .models import (
     ScheduleEntry,
     sum_total_macros,
     get_compatible_units,
+    get_unit_conversion_factor,
     EMPTY_MACROS,
     UNIT_CHOICES,
 )
@@ -452,3 +453,19 @@ def calculate_macros_schedule_item(request):
     return JsonResponse(
         {"success": True, "html_macros": html_macros, "html_units": html_units}
     )
+
+
+def grocery_list(request):
+    schedule_entries = ScheduleEntry.objects.filter(user=request.user)
+
+    grocery_list = dict()
+    for entry in schedule_entries:
+        if not entry.food_item:
+            continue
+        entry.food_item.furnish_grocery_list(grocery_list, entry.quantity, entry.unit)
+
+    html_grocery_list = render_to_string(
+        "piecemeal_app/partials/grocery_list.html",
+        {"grocery_list": grocery_list},
+    )
+    return JsonResponse({"success": True, "html_grocery_list": html_grocery_list})

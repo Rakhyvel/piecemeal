@@ -37,6 +37,7 @@ $(document).ready(function () {
     $(".meal-plan-container").show()
     $("#library").hide()
     $("#create-schedule-entry").show();
+    $("#show-grocery-list").show();
     $("#create-food-item").hide();
 })
 
@@ -46,6 +47,7 @@ $(document).on("click", "#profile-tab-btn", function () {
     $("#library").hide()
 
     $("#create-schedule-entry").hide();
+    $("#show-grocery-list").hide();
     $("#create-food-item").hide();
 
     $('#profile-tab-btn').removeClass('active')
@@ -61,6 +63,7 @@ $(document).on("click", "#meal-plan-tab-btn", function () {
     $("#library").hide()
 
     $("#create-schedule-entry").show();
+    $("#show-grocery-list").show();
     $("#create-food-item").hide();
 
     $('#profile-tab-btn').removeClass('active')
@@ -76,6 +79,7 @@ $(document).on("click", "#library-tab-btn", function () {
     $("#library").show()
 
     $("#create-schedule-entry").hide();
+    $("#show-grocery-list").hide();
     $("#create-food-item").show();
 
     $('#profile-tab-btn').removeClass('active')
@@ -94,11 +98,27 @@ $(document).on("click", "#create-food-item", function () {
 });
 
 $(document).on("click", "#create-schedule-entry", () => {
-    $(".modal-title").text("Add Food Item");
     loadForm("piecemeal/schedule_entry", {});
     $(".modal-title").text("Add Schedule Entry");
     $("#foodItemModal").modal("show");
 });
+
+$(document).on("click", "#show-grocery-list", () => {
+    $(".modal-title").text("Grocery List");
+
+    $.ajax({
+        url: "piecemeal/grocery_list/",
+        type: 'GET',
+        success: (resposne) => {
+            $("#formContainer").html(resposne.html_grocery_list);
+        },
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
+        },
+    })
+
+    $("#foodItemModal").modal("show");
+})
 
 let lastScroll = 0;
 window.addEventListener("scroll", () => {
@@ -107,9 +127,11 @@ window.addEventListener("scroll", () => {
     if (currentScroll > lastScroll + 5) {
         $("#create-schedule-entry").addClass("hide")
         $("#create-food-item").addClass("hide")
+        $("#show-grocery-list").addClass("hide")
     } else if (currentScroll < lastScroll - 5) {
         $("#create-schedule-entry").removeClass("hide")
         $("#create-food-item").removeClass("hide")
+        $("#show-grocery-list").removeClass("hide")
     }
 
     lastScroll = currentScroll <= 0 ? 0 : currentScroll

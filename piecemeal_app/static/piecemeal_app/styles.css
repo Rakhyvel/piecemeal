@@ -33,6 +33,11 @@ h6 {
     font-size: 1.5em;
 }
 
+.grocery-list {
+    list-style: none;
+    font-size: 1em;
+}
+
 .day-container ul {
     list-style: none;
     padding: 0;
@@ -124,7 +129,7 @@ h6 {
     background-color: #fff;
     border-radius: 0.3em;
     box-shadow: 0 0.5em 0.5em rgba(0, 0, 0, 0.2);
-    z-index: 100;
+    z-index: 1100;
     padding: 0.5em;
 }
 
@@ -138,6 +143,7 @@ h6 {
     border-radius: 0.3em;
     cursor: pointer;
     font-size: 1em;
+    z-index: 1100;
 }
 
 .dropdown-menu button:hover {
@@ -336,12 +342,8 @@ select {
     width: 100%;
 }
 
-.sticky-add-button {
+.sticky-button {
     position: fixed;
-    bottom: 2.5em;
-    right: 0.5em;
-    width: 2em;
-    height: 2em;
     background-color: #FFA45B;
     color: white;
     border: none;
@@ -357,13 +359,32 @@ select {
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.sticky-add-button:hover {
+.add-button {
+    bottom: 2.5em;
+    right: 0.5em;
+    width: 2em;
+    height: 2em;
+}
+
+.grocery-button {
+    bottom: 5.0em;
+    right: 0.5em;
+    width: 2em;
+    height: 2em;
+    background-color: #f3f3f3;
+}
+
+.sticky-button:hover {
     background-color: #ff923c;
 }
 
-.sticky-add-button.hide {
-    transform: scale(0.8);
-    opacity: 0.3;
+.grocery-button:hover {
+    background-color: #e4e4e4;
+}
+
+.sticky-button.hide {
+    transform: scale(0.9);
+    opacity: 0.1;
     pointer-events: none;
 }
 

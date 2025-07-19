@@ -150,6 +150,19 @@ class FoodItem(models.Model):
             )
         return retval
 
+    def furnish_grocery_list(self, grocery_list, quantity, unit):
+        factor = get_unit_conversion_factor(unit, self.unit)
+        if not self.is_meal:
+            if self.name not in grocery_list:
+                grocery_list[self.name] = {"quantity": 0.0, "unit": self.unit}
+            factor = get_unit_conversion_factor(unit, self.unit)
+            grocery_list[self.name]["quantity"] += quantity * factor
+        else:
+            for entry in self.entries.all():
+                entry.item.furnish_grocery_list(
+                    grocery_list, factor * quantity * entry.quantity, entry.unit
+                )
+
     def get_compatible_choices(self):
         retval = [
             category
