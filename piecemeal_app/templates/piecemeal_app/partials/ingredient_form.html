@@ -14,7 +14,7 @@
         <input type="number" id="id_quantity" name="quantity" class="{% if form.quantity.errors %} invalid{% endif %}" 
             value="{{ food_item.quantity }}" step="0.1" style="width:4em;">
         <select id="id_unit" name="unit" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
-            {% for group_label, options in form.fields.unit.choices %}
+            {% for group_label, options in compatible_unit_choices %}
             <optgroup label="{{ group_label }}">
                 {% for value, label in options %}
                 <option value="{{ value }}" {% if food_item.unit.value == value %}selected{% endif %}>

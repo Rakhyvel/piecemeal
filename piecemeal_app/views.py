@@ -14,6 +14,7 @@ from .models import (
     sum_total_macros,
     get_compatible_units,
     EMPTY_MACROS,
+    UNIT_CHOICES,
 )
 import json
 
@@ -85,12 +86,14 @@ def get_food_item_form(request, food_item_pk=None):
         food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
         is_meal = food_item.is_meal
         ingredients = food_item.get_ingredients()
+        compatible_unit_choices = food_item.get_compatible_choices()
         macros = sum_total_macros(request.user, ingredients)
         action_url_name = "edit_food_item"
     else:
         is_meal = request.GET.get("is_meal") == "true"
         food_item = None
         ingredients = []
+        compatible_unit_choices = UNIT_CHOICES
         macros = None
         action_url_name = "create_food_item"
 
@@ -112,6 +115,7 @@ def get_food_item_form(request, food_item_pk=None):
             "food_item": food_item,
             "ingredients": ingredients,
             "macros": macros,
+            "compatible_unit_choices": compatible_unit_choices,
             "action_url_name": action_url_name,
         },
     )

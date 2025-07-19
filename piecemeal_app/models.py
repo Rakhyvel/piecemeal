@@ -150,6 +150,14 @@ class FoodItem(models.Model):
             )
         return retval
 
+    def get_compatible_choices(self):
+        retval = [
+            category
+            for category in UNIT_CHOICES
+            if (self.unit, self.unit) in category[1]
+        ]
+        return retval
+
     def get_macros_adjusted_with_unit(self, quantity: float, unit: str):
         macros = self.macro_totals()
         unit_conversion_factor = get_unit_conversion_factor(unit, self.unit)
