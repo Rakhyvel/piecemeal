@@ -144,7 +144,7 @@ class FoodItem(models.Model):
                     "macros": entry.item.get_macros_adjusted_with_unit(
                         entry.quantity, entry.unit
                     ),
-                    "unit": entry.item.unit,
+                    "unit": entry.unit,
                     "compatible_units": get_compatible_units(entry.item.unit),
                 }
             )
