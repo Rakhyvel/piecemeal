@@ -104,6 +104,7 @@ class FoodItem(models.Model):
         choices=[(val, label) for _, group in UNIT_CHOICES for val, label in group],
     )
     is_meal = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
 
     # ingredient specific fields
     calories = models.FloatField(default=0)

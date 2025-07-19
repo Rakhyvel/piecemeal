@@ -1,7 +1,6 @@
 {% load format_extras %}
 <div class="ingredient-row">
-    <div>{{i}}</div>
-    <div class="ingredient-controls">
+    <div class="input-group mb-3">
         <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity|smart_float }}" step="0.1" style="width:4em;">
         <select name="ingredient_unit" class="form-select unit-select">
             {% for unit in ingredient.compatible_units %}
@@ -9,7 +8,7 @@
             {% endfor %}
         </select>
         <input type="text" name="ingredient_name" class="ingredient-name" value="{{ ingredient.name }}" placeholder="Ingredient name">
-        <button type="button" class="remove-row">🗑️</button>
+        <button type="button" class="btn btn-outline-secondary">🗑️</button>
     </div>
 
     <div class="macros">

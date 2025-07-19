@@ -160,7 +160,7 @@ button {
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 0.3em;
-    height: 2.4em;
+    /* height: 2.4em; */
     background-color: #f8f8f8;
     cursor: pointer;
     box-sizing: border-box;
