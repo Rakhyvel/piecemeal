@@ -190,8 +190,9 @@ def save_food_item_from_form(
 
         for name, quantity_str, unit in zip(names, quantities, units):
             ingredient = FoodItem.objects.filter(
-                owner=request.user, name__iexact=name, is_meal=False
+                owner=request.user, name__iexact=name
             ).first()
+
             if not ingredient:
                 continue
 
@@ -462,7 +463,9 @@ def grocery_list(request):
     for entry in schedule_entries:
         if not entry.food_item:
             continue
-        entry.food_item.furnish_grocery_list(grocery_list, entry.quantity, entry.unit)
+        entry.food_item.furnish_grocery_list(
+            grocery_list, entry.quantity * len(entry.days), entry.unit
+        )
 
     html_grocery_list = render_to_string(
         "piecemeal_app/partials/grocery_list.html",

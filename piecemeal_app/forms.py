@@ -30,7 +30,7 @@ class IngredientForm(forms.ModelForm):
         name = self.cleaned_data.get("name")
         if not self.instance.pk:
             try:
-                FoodItem.objects.get(name=name)
+                FoodItem.objects.get(name__iexact=name)
                 raise forms.ValidationError("Duplicate name detected.")
             except FoodItem.DoesNotExist:
                 pass
@@ -70,7 +70,7 @@ class MealForm(forms.ModelForm):
         name = self.cleaned_data.get("name")
         if not self.instance.pk:
             try:
-                FoodItem.objects.get(name=name)
+                FoodItem.objects.get(name__iexact=name)
                 raise forms.ValidationError("Duplicate name detected.")
             except FoodItem.DoesNotExist:
                 pass
