@@ -75,6 +75,24 @@ UNIT_CONVERSIONS = {
 }
 
 
+AISLES = [
+    ("produce", "🍎 Produce"),
+    ("bakery", "🍞 Bakery"),
+    ("frozen", "🧊 Frozen"),
+    ("sauce", "🍶 Condiments & Sauces"),
+    ("deli", "🍗 Deli"),
+    ("canned", "🥫 Canned"),
+    ("health", "💊 Vitamins & Supplements"),
+    ("baking", "🥣 Baking & Spices"),
+    ("pasta", "🍝 Pasta, Rice & Grains"),
+    ("dry", "🍽 Dry & Staple Foods"),
+    ("snacks", "🍪 Snacks"),
+    ("beverages", "🧃 Beverages"),
+    ("dairy", "🥛 Dairy"),
+    ("other", "Other"),
+]
+
+
 # Stores macros directly
 class FoodItem(models.Model):
     name = models.CharField(max_length=100)
@@ -91,6 +109,8 @@ class FoodItem(models.Model):
     protein = models.FloatField(default=0)
     carbs = models.FloatField(default=0)
     fats = models.FloatField(default=0)
+
+    aisle = MultiSelectField(choices=AISLES)
 
     def macro_totals(self):
         if not self.is_meal:
@@ -153,10 +173,10 @@ class FoodItem(models.Model):
     def furnish_grocery_list(self, grocery_list, quantity, unit):
         factor = get_unit_conversion_factor(unit, self.unit)
         if not self.is_meal:
-            if self.name not in grocery_list:
-                grocery_list[self.name] = {"quantity": 0.0, "unit": self.unit}
+            if self not in grocery_list:
+                grocery_list[self] = {"quantity": 0.0, "unit": self.unit}
             factor = get_unit_conversion_factor(unit, self.unit)
-            grocery_list[self.name]["quantity"] += quantity * factor
+            grocery_list[self]["quantity"] += quantity * factor
         else:
             for entry in self.entries.all():
                 entry.item.furnish_grocery_list(

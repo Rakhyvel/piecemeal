@@ -10,7 +10,16 @@ class IngredientForm(forms.ModelForm):
 
     class Meta:
         model = FoodItem
-        fields = ["quantity", "unit", "name", "calories", "protein", "carbs", "fats"]
+        fields = [
+            "quantity",
+            "unit",
+            "name",
+            "aisle",
+            "calories",
+            "protein",
+            "carbs",
+            "fats",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -36,6 +36,7 @@ h6 {
 .grocery-list {
     list-style: none;
     font-size: 1em;
+    padding-left: 0.6em;
 }
 
 .day-container ul {
@@ -372,6 +373,7 @@ select {
     width: 2em;
     height: 2em;
     background-color: #f3f3f3;
+    color: #999;
 }
 
 .sticky-button:hover {

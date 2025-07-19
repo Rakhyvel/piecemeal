@@ -1,8 +1,15 @@
 {% load format_extras %}
 <div>
+    {% for category in categories %}
+    {% if category.1 %}
+    {% with category_name=category.0.1 %}
+    <h3>{{category_name}}</h3>
     <ul class="grocery-list">
-    {% for name, info in grocery_list.items %}
-    <li><input type="checkbox"> {{ info.quantity|smart_float }} {{ info.unit }} {{ name }}</li>
+    {% for food_item in category.1 %}
+    <li><input type="checkbox"> {{ food_item.1.quantity|smart_float }} {{ food_item.1.unit }} {{ food_item.0.name }}</li>
     {% endfor %}
     </ul>
+    {% endwith %}
+    {% endif %}
+    {% endfor %}
 </div>

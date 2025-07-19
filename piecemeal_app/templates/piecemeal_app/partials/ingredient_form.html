@@ -17,7 +17,7 @@
             {% for group_label, options in compatible_unit_choices %}
             <optgroup label="{{ group_label }}">
                 {% for value, label in options %}
-                <option value="{{ value }}" {% if food_item.unit.value == value %}selected{% endif %}>
+                <option value="{{ value }}" {% if food_item.unit == value %}selected{% endif %}>
                     {{ label }}
                 </option>
                 {% endfor %}
@@ -46,6 +46,17 @@
     <div class="form-group">
         <label for="id_carbs">Carbs: </label>
         <input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs }}" step="0.1" style="width:4em;">
+    </div>
+
+    <div class="form-group">
+        <label for="id_aisle">Aisle: </label>
+        <select id="id_aisle" name="aisle" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
+            {% for value, label in aisles %}
+            <option value="{{ value }}" {% if food_item.aisle == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
     </div>
     
     <div class="form-action-buttons">

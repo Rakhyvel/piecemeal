@@ -16,6 +16,7 @@ from .models import (
     get_unit_conversion_factor,
     EMPTY_MACROS,
     UNIT_CHOICES,
+    AISLES,
 )
 import json
 
@@ -118,6 +119,7 @@ def get_food_item_form(request, food_item_pk=None):
             "macros": macros,
             "compatible_unit_choices": compatible_unit_choices,
             "action_url_name": action_url_name,
+            "aisles": AISLES,
         },
     )
 
@@ -467,8 +469,14 @@ def grocery_list(request):
             grocery_list, entry.quantity * len(entry.days), entry.unit
         )
 
+    categories = [(aisle, []) for aisle in AISLES]
+    for item in grocery_list.keys():
+        for i in range(len(categories)):
+            if item.aisle[0] == categories[i][0][0]:
+                categories[i][1].append((item, grocery_list[item]))
+
     html_grocery_list = render_to_string(
         "piecemeal_app/partials/grocery_list.html",
-        {"grocery_list": grocery_list},
+        {"categories": categories},
     )
     return JsonResponse({"success": True, "html_grocery_list": html_grocery_list})
