@@ -33,7 +33,7 @@ DAYS_OF_WEEK = [
 
 
 def get_meal_plan_context(user):
-    food_item_qs = FoodItem.objects.filter(owner=user)
+    food_item_qs = FoodItem.objects.all()
     schedule_entry_qs = ScheduleEntry.objects.filter(user=user)
 
     meals_by_day = {d: [] for d in DAYS_OF_WEEK}
@@ -85,7 +85,7 @@ def home(request):
 @login_required
 def get_food_item_form(request, food_item_pk=None):
     if food_item_pk:
-        food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
+        food_item = get_object_or_404(FoodItem, pk=food_item_pk)
         is_meal = food_item.is_meal
         ingredients = food_item.get_ingredients()
         compatible_unit_choices = food_item.get_compatible_choices()
@@ -191,9 +191,7 @@ def save_food_item_from_form(
         units = request.POST.getlist("ingredient_unit")
 
         for name, quantity_str, unit in zip(names, quantities, units):
-            ingredient = FoodItem.objects.filter(
-                owner=request.user, name__iexact=name
-            ).first()
+            ingredient = FoodItem.objects.filter(name__iexact=name).first()
 
             if not ingredient:
                 continue
@@ -244,7 +242,7 @@ def create_food_item(request):
 @require_POST
 @login_required
 def edit_food_item(request, food_item_pk):
-    food_item = get_object_or_404(FoodItem, pk=food_item_pk, owner=request.user)
+    food_item = get_object_or_404(FoodItem, pk=food_item_pk)
     is_meal = request.POST.get("is_meal") == "true"
     form = (
         MealForm(request.POST, instance=food_item)
@@ -283,7 +281,6 @@ def delete_food_item(request, pk):
     food_item = get_object_or_404(
         FoodItem,
         pk=pk,
-        owner=request.user,
     )
     food_item.delete()
 
@@ -311,7 +308,7 @@ def create_schedule_entry(request):
         return JsonResponse({"success": False, "error": "No days selected"}, status=400)
 
     try:
-        food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+        food_item = FoodItem.objects.get(name__iexact=name)
     except FoodItem.DoesNotExist:
         return JsonResponse(
             {"success": False, "error": "Food item not found"}, status=400
@@ -351,7 +348,7 @@ def update_schedule_entry(request, entry_id):
     # Update food item
     if name:
         try:
-            food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+            food_item = FoodItem.objects.get(name__iexact=name)
             entry.food_item = food_item
         except FoodItem.DoesNotExist:
             # Clear the food item if not found
@@ -394,7 +391,7 @@ def calculate_macros(request):
                     quantity = 0.0
                     ingredient["quantity"] = 0.0
                 name = ingredient["name"]
-                food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+                food_item = FoodItem.objects.get(name__iexact=name)
                 unit = ingredient["unit"]
                 compatible_units = get_compatible_units(food_item.unit)
                 if unit not in compatible_units:
@@ -429,7 +426,7 @@ def calculate_macros(request):
 def calculate_macros_schedule_item(request):
     name = request.POST.get("name")
     unit = request.POST.get("unit")
-    food_item = FoodItem.objects.get(name__iexact=name, owner=request.user)
+    food_item = FoodItem.objects.get(name__iexact=name)
 
     try:
         quantity = float(request.POST.get("quantity"))
@@ -500,9 +497,10 @@ def autocomplete(request):
             }
         )
     for item in shared_results:
+        username = f"by {item.owner.username}" if item.owner else "common"
         data.append(
             {
-                "label": f"{item.name} <em>by {item.owner.username}</em>",
+                "label": f"{item.name} <em>({username})</em>",
                 "value": item.name,
             }
         )

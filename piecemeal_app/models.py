@@ -97,7 +97,9 @@ AISLES = [
 class FoodItem(models.Model):
     # both ingredient and meal fields
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="food_items")
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="food_items"
+    )
     quantity = models.FloatField(default=0)
     unit = models.CharField(
         max_length=10,
@@ -112,6 +114,7 @@ class FoodItem(models.Model):
     carbs = models.FloatField(default=0)
     fats = models.FloatField(default=0)
     aisle = MultiSelectField(choices=AISLES, default="other")
+    common_csv_filename = models.CharField(max_length=20, default="")
 
     # meal specific fields
     makes = models.FloatField(default=1.0)
