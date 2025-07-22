@@ -393,7 +393,7 @@ $(document).on('input change', 'input.invalid, select.invalid, textarea.invalid'
 
 function setupAutocomplete(input) {
     console.log("setupAutocomplet for: " + input)
-    $(input).autocomplete({
+    input.autocomplete({
         source: (req, res) => {
             console.log('hi!')
             $.ajax({
@@ -416,7 +416,7 @@ function setupAutocomplete(input) {
         }
     });
 
-    $(input).autocomplete("instance")._renderItem = (ul, item) => {
+    input.autocomplete("instance")._renderItem = (ul, item) => {
         return $("<li>").append(
             `<div>${item.label}</div>`
         ).appendTo(ul)
