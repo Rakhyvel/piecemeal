@@ -158,7 +158,6 @@ function loadForm(url, data) {
         data: data,
         success: function (data) {
             $("#formContainer").html(data);
-            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
         },
@@ -194,7 +193,6 @@ $(document).on("submit", ".create-food-item-form", function (e) {
                 if (isMealPlanHidden) {
                     $(".meal-plan-container").hide();
                 }
-                reloadIngredientNames();
                 setupAutocomplete($(".entry-food-name-input"));
                 setupAutocomplete($(".ingredient_name"));
             } else {
@@ -221,7 +219,6 @@ $(document).on("click", ".edit-food-item", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
-            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
@@ -237,7 +234,6 @@ $(document).on("click", ".edit-schedule-entry", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
-            reloadIngredientNames();
             setupAutocomplete($(".entry-food-name-input"));
             setupAutocomplete($(".ingredient_name"));
             $("#foodItemModal").modal("show");
@@ -259,7 +255,6 @@ $(document).on("submit", ".delete-food-item-form", function (e) {
             if (response.success) {
                 $("#library").replaceWith(response.html_library);
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                reloadIngredientNames();
                 setupAutocomplete($(".entry-food-name-input"));
                 setupAutocomplete($(".ingredient_name"));
                 if (isLibraryHidden) {
@@ -302,7 +297,6 @@ $(document).on("submit", ".create-schedule-entry-form", function (e) {
         success: function (response) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                reloadIngredientNames();
                 setupAutocomplete($(".entry-food-name-input"));
                 setupAutocomplete($(".ingredient_name"));
                 $("#foodItemModal").modal("hide");
@@ -326,7 +320,6 @@ $(document).on("submit", ".delete-schedule-entry-form", function (e) {
         success: function (response) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                reloadIngredientNames();
                 setupAutocomplete($(".entry-food-name-input"));
                 setupAutocomplete($(".ingredient_name"));
                 $("#foodItemModal").modal("hide");
@@ -398,25 +391,8 @@ $(document).on('input change', 'input.invalid, select.invalid, textarea.invalid'
     $(this).removeClass('invalid');
 });
 
-// Meal ingredient row shit
-var ingredientNames = [
-    {% for ingredient in food_items %}
-decodeHTMLEntities("{{ ingredient.name }}"),
-    {% endfor %}
-];
-
-function reloadIngredientNames() {
-    ingredientNames = [];
-    $("#library .ingredient-name-autocomplete").each(function () {
-        var encodedName = $(this).text().trim();
-        var decodedName = decodeHTMLEntities(encodedName);
-        if (decodedName && !ingredientNames.includes(decodedName)) {
-            ingredientNames.push(decodedName);
-        }
-    });
-}
-
 function setupAutocomplete(input) {
+    console.log("setupAutocomplet for: " + input)
     $(input).autocomplete({
         source: (req, res) => {
             console.log('hi!')
