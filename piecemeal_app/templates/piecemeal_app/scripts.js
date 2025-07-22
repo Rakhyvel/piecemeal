@@ -158,8 +158,8 @@ function loadForm(url, data) {
         data: data,
         success: function (data) {
             $("#formContainer").html(data);
-            setupAutocomplete($(".entry-food-name-input"));
-            setupAutocomplete($(".ingredient_name"));
+            applyAutocompleteTo(".entry-food-name-input");
+            applyAutocompleteTo(".ingredient-name");
         },
         error: (xhr) => {
             $("#formContainer").html(`${xhr.responseText}`);
@@ -193,8 +193,8 @@ $(document).on("submit", ".create-food-item-form", function (e) {
                 if (isMealPlanHidden) {
                     $(".meal-plan-container").hide();
                 }
-                setupAutocomplete($(".entry-food-name-input"));
-                setupAutocomplete($(".ingredient_name"));
+                applyAutocompleteTo(".entry-food-name-input");
+                applyAutocompleteTo(".ingredient-name");
             } else {
                 // clear all invalids, so they don't accumulate
                 $("input, select").removeClass("invalid");
@@ -219,8 +219,8 @@ $(document).on("click", ".edit-food-item", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
-            setupAutocomplete($(".entry-food-name-input"));
-            setupAutocomplete($(".ingredient_name"));
+            applyAutocompleteTo(".entry-food-name-input");
+            applyAutocompleteTo(".ingredient-name");
             $("#foodItemModal").modal("show");
         }
     });
@@ -234,8 +234,8 @@ $(document).on("click", ".edit-schedule-entry", function (e) {
         type: "GET",
         success: function (data) {
             $("#formContainer").html(data);
-            setupAutocomplete($(".entry-food-name-input"));
-            setupAutocomplete($(".ingredient_name"));
+            applyAutocompleteTo(".entry-food-name-input");
+            applyAutocompleteTo(".ingredient-name");
             $("#foodItemModal").modal("show");
         }
     });
@@ -255,8 +255,8 @@ $(document).on("submit", ".delete-food-item-form", function (e) {
             if (response.success) {
                 $("#library").replaceWith(response.html_library);
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                setupAutocomplete($(".entry-food-name-input"));
-                setupAutocomplete($(".ingredient_name"));
+                applyAutocompleteTo(".entry-food-name-input");
+                applyAutocompleteTo(".ingredient-name");
                 if (isLibraryHidden) {
                     $("#library").hide();
                 }
@@ -297,8 +297,8 @@ $(document).on("submit", ".create-schedule-entry-form", function (e) {
         success: function (response) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                setupAutocomplete($(".entry-food-name-input"));
-                setupAutocomplete($(".ingredient_name"));
+                applyAutocompleteTo(".entry-food-name-input");
+                applyAutocompleteTo(".ingredient-name");
                 $("#foodItemModal").modal("hide");
             } else {
                 console.log(xhr.responseText);
@@ -320,8 +320,8 @@ $(document).on("submit", ".delete-schedule-entry-form", function (e) {
         success: function (response) {
             if (response.success) {
                 $(".meal-plan-container").replaceWith(response.html_meal_plan);
-                setupAutocomplete($(".entry-food-name-input"));
-                setupAutocomplete($(".ingredient_name"));
+                applyAutocompleteTo(".entry-food-name-input");
+                applyAutocompleteTo(".ingredient-name");
                 $("#foodItemModal").modal("hide");
             }
         },
@@ -391,28 +391,32 @@ $(document).on('input change', 'input.invalid, select.invalid, textarea.invalid'
     $(this).removeClass('invalid');
 });
 
+function applyAutocompleteTo(selector) {
+    const $inputs = $(selector);
+    if ($inputs.length === 0) {
+        console.warn("No elements found for selector:", selector);
+    }
+    $inputs.each(function () {
+        setupAutocomplete($(this));
+    });
+}
+
 function setupAutocomplete(input) {
-    console.log("setupAutocomplet for: " + input)
     input.autocomplete({
         source: (req, res) => {
-            console.log('hi!')
             $.ajax({
                 url: "piecemeal/autocomplete/",
-                data: {
-                    term: req.term
-                },
-                success: (data) => {
-                    res(data)
-                }
+                data: { term: req.term },
+                success: (data) => res(data)
             })
         },
-        focus: (event, ui) => {
+        focus: function (event, ui) {
             event.preventDefault()
-            $(this).val(ui.item.value)
+            $(event.target).val(ui.item.value)
         },
-        select: (event, ui) => {
+        select: function (event, ui) {
             event.preventDefault()
-            $(this).val(ui.item.value)
+            $(event.target).val(ui.item.value)
         }
     });
 
@@ -429,7 +433,7 @@ $(document).on("click", "#add-ingredient-row", function () {
     {% include "piecemeal_app/partials/meal_ingredient_item.html" %}
     `);
     $("#ingredient-rows").append(newRow);
-    setupAutocomplete(newRow.find(".ingredient-name"));
+    applyAutocompleteTo(".ingredient-name");
 });
 $(document).on("click", "#add-ingredient-row", updateMealMacros);
 
@@ -439,9 +443,7 @@ $(document).on("click", ".remove-row", function () {
 $(document).on("click", ".remove-row", updateMealMacros);
 
 // Initialize autocomplete for any initial rows
-$(".ingredient-name").each(function () {
-    setupAutocomplete(this);
-});
+applyAutocompleteTo(".ingredient-name");
 
 $(document).on("click", ".kebab-toggle", function (e) {
     e.stopPropagation();
