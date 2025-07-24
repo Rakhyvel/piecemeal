@@ -98,6 +98,21 @@ h6 {
     display: flex;
 }
 
+.library-search-bar {
+    width: 100%;
+}
+
+.food-search-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+    padding: 0.5rem;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    font-size: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
 
 .macros {
     color: #333;

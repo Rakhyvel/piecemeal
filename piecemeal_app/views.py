@@ -33,8 +33,13 @@ DAYS_OF_WEEK = [
 ]
 
 
-def get_meal_plan_context(user):
-    food_item_qs = FoodItem.objects.filter(Q(is_public=True) | Q(owner=user))
+def get_meal_plan_context(user, search=""):
+    if len(search) == 0:
+        food_item_qs = FoodItem.objects.filter(Q(is_public=True) | Q(owner=user))
+    else:
+        food_item_qs = FoodItem.objects.filter(
+            Q(name__icontains=search), Q(is_public=True) | Q(owner=user)
+        )
     schedule_entry_qs = ScheduleEntry.objects.filter(user=user)
 
     meals_by_day = {d: [] for d in DAYS_OF_WEEK}
@@ -508,3 +513,20 @@ def autocomplete(request):
         )
 
     return JsonResponse(data, safe=False)
+
+
+@require_GET
+@login_required
+def search(request):
+    query = request.GET.get("q", "")
+    user = request.user
+    context = get_meal_plan_context(user=user, search=query)
+    html_library_food_item_list = render_to_string(
+        "piecemeal_app/partials/library_food_item_list.html", context
+    )
+    return JsonResponse(
+        {
+            "success": True,
+            "html_library_food_item_list": html_library_food_item_list,
+        }
+    )

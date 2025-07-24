@@ -1,34 +1,8 @@
 {% load dict_extras %}
 {% load format_extras %}
-<div id="library" class="day-container">
-    <ul>
-        {% for food_item in food_items %}
-        <li class="library-food-item">
-            <div class="library-food-item-top">
-                <span class="library-food-item-name ingredient-name">{{ food_item.quantity|smart_float }} {{ food_item.unit }} <span class="ingredient-name-autocomplete">{{ food_item.name }}</span></span>
-                <div class="library-food-item-buttons dropdown">
-                    <button class="kebab-toggle">&hellip;</button>
-                    <div class="dropdown-menu">
-                        <button class="edit-food-item" data-id='{{ food_item.id }}'>👨‍🍳 Edit Food</button>
-                        <form method="post" action="{% url 'delete_food_item' food_item.id %}" class="delete-food-item-form">
-                            {% csrf_token %}
-                            <button type="submit">🗑️ Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            {% with macros=food_item.macro_totals %}
-            <div class="library-food-item-macros macros">
-                <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
-                <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
-                <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
-                <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
-            </div>
-            {% endwith %}
-        </li>
-        {% empty %}
-        <li>No food added.</li>
-        {% endfor %}
-    </ul>
+<div id="library">
+    <div class="food-search-bar">
+        <input type="text" id="library-search" placeholder="Search food..." class="library-search-bar">
+    </div>
+    {% include 'piecemeal_app/partials/library_food_item_list.html' %}
 </div>

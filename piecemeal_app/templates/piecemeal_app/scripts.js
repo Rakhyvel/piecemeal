@@ -167,6 +167,24 @@ function loadForm(url, data) {
     });
 }
 
+$(document).on("input", "#library-search", function () {
+    const query = $(this).val();
+
+    $.ajax({
+        url: 'piecemeal/search/',
+        type: 'GET',
+        data: {
+            q: query,
+        },
+        success: function (data) {
+            $("#food-item-list").replaceWith(data.html_library_food_item_list);
+        },
+        error: (xhr) => {
+            $("#formContainer").html(`${xhr.responseText}`);
+        }
+    });
+});
+
 // Handle form submissions
 $(document).on("submit", ".create-food-item-form", function (e) {
     e.preventDefault();

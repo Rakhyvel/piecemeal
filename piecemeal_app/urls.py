@@ -75,4 +75,5 @@ urlpatterns = [
     ),
     path("piecemeal/grocery_list/", views.grocery_list, name="grocery_list"),
     path("piecemeal/autocomplete/", views.autocomplete, name="autocomplete"),
+    path("piecemeal/search/", views.search, name="search"),
 ]
