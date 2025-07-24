@@ -350,6 +350,7 @@ function updateMealMacros() {
         success: function (response) {
             if (response.success) {
                 $("#ingredient-rows").replaceWith(response.html_meal_ingredients_list);
+                applyAutocompleteTo(".ingredient-name");
             } else {
                 console.log(response);
             }
@@ -429,11 +430,10 @@ function setupAutocomplete(input) {
 
 // Add new ingredient rows
 $(document).on("click", "#add-ingredient-row", function () {
-    var newRow = $(`
+    var newRow = `
     {% include "piecemeal_app/partials/meal_ingredient_item.html" %}
-    `);
-    $("#ingredient-rows").append(newRow);
-    applyAutocompleteTo(".ingredient-name");
+    `;
+    $(newRow).appendTo("#ingredient-rows");
 });
 $(document).on("click", "#add-ingredient-row", updateMealMacros);
 

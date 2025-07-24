@@ -7,7 +7,7 @@
             <option value="{{ unit }}"{% if unit == ingredient.unit %} selected{% endif %}>{{ unit }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="ingredient_name" class="ingredient-name" value="{{ ingredient.name }}" placeholder="Ingredient name">
+        <input type="text" name="ingredient-name" class="ingredient-name" value="{{ ingredient.name }}" placeholder="Ingredient name">
         <button type="button" class="remove-row">🗑️</button>
     </div>
 
