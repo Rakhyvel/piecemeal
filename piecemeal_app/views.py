@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .forms import IngredientForm, MealForm
 from datetime import datetime
+from django.db.models import Q
 from .models import (
     FoodItem,
     MealEntry,
@@ -33,7 +34,7 @@ DAYS_OF_WEEK = [
 
 
 def get_meal_plan_context(user):
-    food_item_qs = FoodItem.objects.all()
+    food_item_qs = FoodItem.objects.filter(Q(is_public=True) | Q(owner=user))
     schedule_entry_qs = ScheduleEntry.objects.filter(user=user)
 
     meals_by_day = {d: [] for d in DAYS_OF_WEEK}
