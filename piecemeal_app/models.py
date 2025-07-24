@@ -215,9 +215,7 @@ def sum_total_macros(user, ingredients: list[dict], makes: float) -> dict:
     total = EMPTY_MACROS.copy()
     for ingredient in ingredients:
         try:
-            food_item = FoodItem.objects.get(
-                name__iexact=ingredient["name"], owner=user
-            )
+            food_item = FoodItem.objects.get(name__iexact=ingredient["name"])
         except FoodItem.DoesNotExist:
             continue
         food_item_unit = food_item.unit
