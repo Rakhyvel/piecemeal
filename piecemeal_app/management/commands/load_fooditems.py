@@ -24,7 +24,6 @@ class Command(BaseCommand):
         with open(csv_path, newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                print(row)
                 FoodItem.objects.create(
                     is_meal=False,
                     owner=None,
@@ -32,6 +31,7 @@ class Command(BaseCommand):
                     quantity=100.0,
                     unit="g",
                     name=row.get("name"),
+                    aisle=row.get("aisle"),
                     calories=float((row.get("calories") or "0.0").strip()),
                     protein=float((row.get("protein") or "0.0").strip()),
                     carbs=float((row.get("carbs") or "0.0").strip()),

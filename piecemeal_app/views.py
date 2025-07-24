@@ -251,7 +251,7 @@ def edit_food_item(request, food_item_pk):
         else IngredientForm(request.POST, instance=food_item)
     )
 
-    if form.is_valid():
+    if form.is_valid() and request.user == food_item.owner:
         save_food_item_from_form(request, form, food_item)
 
         context = get_meal_plan_context(request.user)
