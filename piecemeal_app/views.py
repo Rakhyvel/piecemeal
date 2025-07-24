@@ -406,7 +406,8 @@ def calculate_macros(request):
 
     data = json.loads(request.body)
     ingredients = data.get("ingredients", [])
-    makes = float(data.get("makes", 1))
+    makes_str = data.get("makes", 1)
+    makes = float(makes_str) if len(makes_str) > 0 else 1
     decorate_with_macros(ingredients, makes)
     macros = sum_total_macros(request.user, ingredients, makes)
     html_meal_ingredients_list = render_to_string(
