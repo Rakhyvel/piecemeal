@@ -13,6 +13,7 @@
     </div>
 
     <div class="macros">
+        {{macros.protein|macro_ratio:macros.calories}}
         <span class="macro-pill">🔥 {{ ingredient.macros.calories|smart_float }} kcal</span>
         <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories|greater_than:0.4 %}bold{% endif %}">🍗 {{ ingredient.macros.protein|smart_float }}g</span>
         <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4 %}bold{% endif %}">🥑 {{ ingredient.macros.fats|smart_float }}g</span>
