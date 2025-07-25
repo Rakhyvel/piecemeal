@@ -9,6 +9,7 @@
                 <button class="kebab-toggle">&hellip;</button>
                 <div class="dropdown-menu">
                     <button class="edit-food-item" data-id='{{ food_item.id }}'>👨‍🍳 Edit Food</button>
+                    <button class="duplicate-food-item" data-id='{{ food_item.id }}'>📝 Duplicate Food</button>
                     <form method="post" action="{% url 'delete_food_item' food_item.id %}" class="delete-food-item-form">
                         {% csrf_token %}
                         <button type="submit">🗑️ Delete</button>

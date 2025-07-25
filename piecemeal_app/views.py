@@ -120,7 +120,45 @@ def get_food_item_form(request, food_item_pk=None):
         form_html_file,
         {
             "form": form,
-            "food_item": food_item,
+            "food_item": food_item.get_dict() if food_item else None,
+            "ingredients": ingredients,
+            "macros": macros,
+            "compatible_unit_choices": compatible_unit_choices,
+            "action_url_name": action_url_name,
+            "aisles": AISLES,
+        },
+    )
+
+
+@login_required
+def duplicate_food_item_form(request, food_item_pk):
+    food_item = get_object_or_404(FoodItem, pk=food_item_pk)
+    is_meal = food_item.is_meal
+    ingredients = food_item.get_ingredients()
+    compatible_unit_choices = food_item.get_compatible_choices()
+    macros = sum_total_macros(request.user, ingredients, food_item.makes)
+    action_url_name = "create_food_item"
+
+    food_item_dict = food_item.get_dict()
+    food_item_dict["id"] = None
+    food_item_dict["name"] = ""
+
+    if is_meal:
+        (form_html_file, form) = "piecemeal_app/partials/meal_form.html", MealForm(
+            instance=None
+        )
+    else:
+        (form_html_file, form) = (
+            "piecemeal_app/partials/ingredient_form.html",
+            IngredientForm(instance=None),
+        )
+
+    return render(
+        request,
+        form_html_file,
+        {
+            "form": form,
+            "food_item": food_item_dict,
             "ingredients": ingredients,
             "macros": macros,
             "compatible_unit_choices": compatible_unit_choices,

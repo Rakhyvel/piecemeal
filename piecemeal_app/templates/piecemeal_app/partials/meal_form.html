@@ -7,7 +7,7 @@
 {% endif %}
 <form method="post"
     class="create-food-item-form"
-    action="{% if food_item %}{% url action_url_name food_item.id %}{% else %}{% url action_url_name %}{% endif %}" 
+    action="{% if food_item and food_item.id %}{% url action_url_name food_item.id %}{% else %}{% url action_url_name %}{% endif %}" 
     data-type="meal">
     
     <div class="ingredient-controls">

@@ -151,18 +151,31 @@ class FoodItem(models.Model):
                     total[k] += child_macros[k] * factor
             return total
 
-    """
-      "name": String,
-      "quantity": Float,
-      "macros": {
-        "calories": Float,
-        "protein": Float,
-        "carbs": Float,
-        "fat": Float,
-      }
-    """
+    def get_dict(self):
+        return {
+            "id": self.pk,
+            "name": self.name,
+            "calories": self.calories,
+            "protein": self.protein,
+            "carbs": self.carbs,
+            "fats": self.fats,
+            "aisle": self.aisle,
+            "is_public": self.is_public,
+            "quantity": self.quantity,
+            "makes": self.makes,
+        }
 
     def get_ingredients(self):
+        """
+        "name": String,
+        "quantity": Float,
+        "macros": {
+            "calories": Float,
+            "protein": Float,
+            "carbs": Float,
+            "fat": Float,
+        }
+        """
         retval = []
         entries: list[MealEntry] = self.entries.all()
         for entry in entries:

@@ -244,6 +244,21 @@ $(document).on("click", ".edit-food-item", function (e) {
     });
 });
 
+$(document).on("click", ".duplicate-food-item", function (e) {
+    $(".modal-title").text("Duplicate Food Item");
+    const food_item_id = $(this).data("id");
+    $.ajax({
+        url: "piecemeal/food_item/duplicate/" + food_item_id + "/",
+        type: "GET",
+        success: function (data) {
+            $("#formContainer").html(data);
+            applyAutocompleteTo(".entry-food-name-input");
+            applyAutocompleteTo(".ingredient-name");
+            $("#foodItemModal").modal("show");
+        }
+    });
+})
+
 $(document).on("click", ".edit-schedule-entry", function (e) {
     $(".modal-title").text("Edit Schedule Entry");
     const entry_id = $(this).data("id");

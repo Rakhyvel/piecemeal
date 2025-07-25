@@ -24,6 +24,11 @@ urlpatterns = [
         name="get_edit_food_item",
     ),
     path(
+        "piecemeal/food_item/duplicate/<int:food_item_pk>/",
+        views.duplicate_food_item_form,
+        name="duplicate_edit_food_item",
+    ),
+    path(
         "piecemeal/food_item/create/",
         views.create_food_item,
         name="create_food_item",
