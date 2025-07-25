@@ -1,4 +1,5 @@
 {% load format_extras %}
+{% load macros %}
 <div class="ingredient-row">
     <div class="ingredient-controls">
         <input type="number" name="ingredient_quantity" value="{{ ingredient.quantity|smart_float }}" step="0.1" style="width:4em;">
@@ -13,8 +14,8 @@
 
     <div class="macros">
         <span class="macro-pill">🔥 {{ ingredient.macros.calories|smart_float }} kcal</span>
-        <span class="macro-pill">🍗 {{ ingredient.macros.protein|smart_float }}g</span>
-        <span class="macro-pill">🥑 {{ ingredient.macros.fats|smart_float }}g</span>
-        <span class="macro-pill">🍞 {{ ingredient.macros.carbs|smart_float }}g</span>
+        <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ ingredient.macros.protein|smart_float }}g</span>
+        <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4 %}bold{% endif %}">🥑 {{ ingredient.macros.fats|smart_float }}g</span>
+        <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ ingredient.macros.carbs|smart_float }}g</span>
     </div>
 </div>

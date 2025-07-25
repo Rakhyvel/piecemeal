@@ -1,7 +1,8 @@
 {% load format_extras %}
+{% load macros %}
 <div id="scheudle-entry-macros" class="macros">
     <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
-    <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
-    <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
-    <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
+    <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ macros.protein|smart_float }}g</span>
+    <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4 %}bold{% endif %}">🥑 {{ macros.fats|smart_float }}g</span>
+    <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ macros.carbs|smart_float }}g</span>
 </div>

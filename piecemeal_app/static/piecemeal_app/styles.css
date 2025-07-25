@@ -13,6 +13,10 @@ h6 {
     font-family: 'Quicksand', sans-serif;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 #profile,
 .day-container {
     padding: 20px;

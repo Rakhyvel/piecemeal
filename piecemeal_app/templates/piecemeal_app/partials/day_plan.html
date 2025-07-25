@@ -1,11 +1,12 @@
 {% load format_extras %}
+{% load macros %}
 <div id="meal-plan-{{ day }}" class="day-container">
     <h3>{{ day|capfirst }}</h3>
     <div class="day-macros macros">
         <span class="macro-pill">🔥 {{ day_macros.calories|smart_float }} kcal</span>
-        <span class="macro-pill">🍗 {{ day_macros.protein|smart_float }}g</span>
-        <span class="macro-pill">🥑 {{ day_macros.fats|smart_float }}g</span>
-        <span class="macro-pill">🍞 {{ day_macros.carbs|smart_float }}g</span>
+        <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ day_macros.protein|smart_float }}g</span>
+        <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4 %}bold{% endif %}">🥑 {{ day_macros.fats|smart_float }}g</span>
+        <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ day_macros.carbs|smart_float }}g</span>
     </div>
     <div class="ingredients">
         <ul id="ingredient-rows-{{ day }}">
@@ -33,9 +34,9 @@
                 {% with macros=schedule_entry.macro_totals %}
                 <div class="schedule-entry-macros macros">
                     <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
-                    <span class="macro-pill">🍗 {{ macros.protein|smart_float }}g</span>
-                    <span class="macro-pill">🥑 {{ macros.fats|smart_float }}g</span>
-                    <span class="macro-pill">🍞 {{ macros.carbs|smart_float }}g</span>
+                    <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ macros.protein|smart_float }}g</span>
+                    <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4 %}bold{% endif %}">🥑 {{ macros.fats|smart_float }}g</span>
+                    <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ macros.carbs|smart_float }}g</span>
                 </div>
                 {% endwith %}
             </li>
