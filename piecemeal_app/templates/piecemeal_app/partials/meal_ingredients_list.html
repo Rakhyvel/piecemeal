@@ -10,6 +10,7 @@
         "protein": Float,
         "carbs": Float,
         "fat": Float,
+        "fiber": Float,
       },
       "compatible_units": [String]
     }
@@ -19,6 +20,7 @@
     "protein": Float,
     "carbs": Float,
     "fat": Float,
+    "fiber": Float,
   }
 }
 -->
@@ -30,6 +32,7 @@
         <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ macros.protein|smart_float }}g</span>
         <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4  %}bold{% endif %}">🥑 {{ macros.fats|smart_float }}g</span>
         <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ macros.carbs|smart_float }}g</span>
+        <span class="macro-pill">🧶 {{ macros.fiber|smart_float }}g</span>
     </div>
 
     {% for ingredient in ingredients %}

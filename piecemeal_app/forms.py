@@ -20,6 +20,7 @@ class IngredientForm(forms.ModelForm):
             "protein",
             "carbs",
             "fats",
+            "fiber",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -65,6 +66,9 @@ class IngredientForm(forms.ModelForm):
 
     def clean_carbs(self):
         return self._assert_non_negative("carbs")
+
+    def clean_fiber(self):
+        return self._assert_non_negative("fiber")
 
 
 class MealForm(forms.ModelForm):

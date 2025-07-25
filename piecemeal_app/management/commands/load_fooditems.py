@@ -36,6 +36,7 @@ class Command(BaseCommand):
                     protein=float((row.get("protein") or "0.0").strip()),
                     carbs=float((row.get("carbs") or "0.0").strip()),
                     fats=float((row.get("fats") or "0.0").strip()),
+                    fiber=float((row.get("fiber") or "0.0").strip()),
                     common_csv_filename=basename,
                 )
                 created += 1

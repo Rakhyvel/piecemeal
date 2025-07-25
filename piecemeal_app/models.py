@@ -3,7 +3,13 @@ from django.contrib.auth.models import User
 from multiselectfield import MultiSelectField
 
 
-EMPTY_MACROS = {"calories": 0.0, "protein": 0.0, "fats": 0.0, "carbs": 0.0}
+EMPTY_MACROS = {
+    "calories": 0.0,
+    "protein": 0.0,
+    "fats": 0.0,
+    "carbs": 0.0,
+    "fiber": 0.0,
+}
 
 UNIT_CHOICES = [
     (
@@ -115,6 +121,7 @@ class FoodItem(models.Model):
     protein = models.FloatField(default=0)
     carbs = models.FloatField(default=0)
     fats = models.FloatField(default=0)
+    fiber = models.FloatField(default=0)
     aisle = MultiSelectField(choices=AISLES, default="other")
     common_csv_filename = models.CharField(max_length=20, default="")
 
@@ -128,6 +135,7 @@ class FoodItem(models.Model):
                 "protein": self.protein,
                 "carbs": self.carbs,
                 "fats": self.fats,
+                "fiber": self.fiber,
             }
         else:
             total = EMPTY_MACROS.copy()
@@ -161,6 +169,7 @@ class FoodItem(models.Model):
             "protein": self.protein,
             "carbs": self.carbs,
             "fats": self.fats,
+            "fiber": self.fiber,
             "aisle": self.aisle,
             "is_public": self.is_public,
             "quantity": self.quantity,
@@ -176,6 +185,7 @@ class FoodItem(models.Model):
             "protein": Float,
             "carbs": Float,
             "fat": Float,
+            "fiber": Float,
         }
         """
         retval = []
@@ -312,6 +322,6 @@ class ScheduleEntry(models.Model):
 
     def macro_totals(self):
         if not self.food_item:
-            return {"calories": 0, "protein": 0, "fats": 0, "carbs": 0}
+            return EMPTY_MACROS
 
         return self.food_item.get_macros_adjusted_with_unit(self.quantity, self.unit)

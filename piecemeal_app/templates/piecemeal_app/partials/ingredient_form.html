@@ -55,6 +55,11 @@
     </div>
 
     <div class="form-group">
+        <label for="id_carbs">Fiber: </label>
+        <input type="number" id="id_fiber" name="fiber" value="{{ food_item.fiber|smart_float }}" step="0.1" style="width:4em;">
+    </div>
+
+    <div class="form-group">
         <label for="id_aisle">Aisle: </label>
         <select id="id_aisle" name="aisle" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
             {% for value, label in aisles %}

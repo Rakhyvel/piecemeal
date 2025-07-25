@@ -7,6 +7,7 @@
         <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ day_macros.protein|smart_float }}g</span>
         <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4  %}bold{% endif %}">🥑 {{ day_macros.fats|smart_float }}g</span>
         <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ day_macros.carbs|smart_float }}g</span>
+        <span class="macro-pill">🧶 {{ day_macros.fiber|smart_float }}g</span>
     </div>
     <div class="ingredients">
         <ul id="ingredient-rows-{{ day }}">
