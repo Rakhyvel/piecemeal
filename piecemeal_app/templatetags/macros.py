@@ -28,6 +28,6 @@ def macro_ratio(macro_grams, total_calories):
 
 @register.filter
 def fats_ratio(macro_grams, total_calories):
-    if total_calories == 0:
+    if macro_grams == 0 or total_calories == 0:
         return 0
     return (macro_grams * 9) / total_calories  # 4 cals/g for protein/carbs, 9 for fat
