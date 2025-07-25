@@ -21,9 +21,17 @@ def mul(value, arg):
 
 @register.filter
 def macro_ratio(macro_grams, total_calories):
-    if float(macro_grams) == 0 or float(total_calories) == 0:
+    if total_calories == 0:
         return 0
-    return (float(macro_grams) * 4) / float(total_calories)
+    return (macro_grams * 4) / total_calories
+
+
+@register.filter
+def greater_than(value, arg):
+    try:
+        return float(value) > float(arg)
+    except (TypeError, ValueError):
+        return False
 
 
 @register.filter
