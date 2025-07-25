@@ -21,13 +21,13 @@ def mul(value, arg):
 
 @register.filter
 def macro_ratio(macro_grams, total_calories):
-    if macro_grams == 0 or total_calories == 0:
+    if float(macro_grams) == 0 or float(total_calories) == 0:
         return 0
-    return (macro_grams * 4) / total_calories  # 4 cals/g for protein/carbs, 9 for fat
+    return (float(macro_grams) * 4) / float(total_calories)
 
 
 @register.filter
 def fats_ratio(macro_grams, total_calories):
     if macro_grams == 0 or total_calories == 0:
         return 0
-    return (macro_grams * 9) / total_calories  # 4 cals/g for protein/carbs, 9 for fat
+    return (macro_grams * 9) / total_calories
