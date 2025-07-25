@@ -17,6 +17,6 @@
         <span class="macro-pill {% if ingredient.macros.protein|macro_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🍗 {{ ingredient.macros.protein|smart_int }}g</span>
         <span class="macro-pill {% if ingredient.macros.fats|fats_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🥑 {{ ingredient.macros.fats|smart_int }}g</span>
         <span class="macro-pill {% if ingredient.macros.carbs|macro_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🍞 {{ ingredient.macros.carbs|smart_int }}g</span>
-        <span class="macro-pill">🧶 {{ macros.fiber|smart_int }}g</span>
+        <span class="macro-pill">🧶 {{ ingredient.macros.fiber|smart_int }}g</span>
     </div>
 </div>
