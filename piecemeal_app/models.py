@@ -21,6 +21,8 @@ UNIT_CHOICES = [
             ("tsp", "tsp"),
             ("tbsp", "tbsp"),
             ("cup", "cup"),
+            ("L", "L"),
+            ("mL", "mL"),
         ],
     ),
     (
