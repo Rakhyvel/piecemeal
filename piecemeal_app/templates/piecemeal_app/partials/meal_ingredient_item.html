@@ -14,7 +14,7 @@
 
     <div class="macros">
         <span class="macro-pill">🔥 {{ ingredient.macros.calories|smart_float }} kcal</span>
-        <span class="macro-pill {% if ingredient.macros.protein|macro_ratio:ingredient.macros.calories|greater_than:0.4 %}bold{% endif %}">🍗 {{ ingredient.macros.protein|smart_float }}g</span>
+        <span class="macro-pill {% if ingredient.macros.protein|macro_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🍗 {{ ingredient.macros.protein|smart_float }}g</span>
         <span class="macro-pill {% if ingredient.macros.fats|fats_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🥑 {{ ingredient.macros.fats|smart_float }}g</span>
         <span class="macro-pill {% if ingredient.macros.carbs|macro_ratio:ingredient.macros.calories > 0.4 %}bold{% endif %}">🍞 {{ ingredient.macros.carbs|smart_float }}g</span>
     </div>
