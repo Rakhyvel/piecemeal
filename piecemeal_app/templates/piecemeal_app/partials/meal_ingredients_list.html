@@ -28,11 +28,11 @@
 {% load macros %}
 <div id="ingredient-rows">
     <div class="macros">
-        <span class="macro-pill">🔥 {{ macros.calories|smart_float }} kcal</span>
-        <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ macros.protein|smart_float }}g</span>
-        <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4  %}bold{% endif %}">🥑 {{ macros.fats|smart_float }}g</span>
-        <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ macros.carbs|smart_float }}g</span>
-        <span class="macro-pill">🧶 {{ macros.fiber|smart_float }}g</span>
+        <span class="macro-pill">🔥 {{ macros.calories|smart_int }} kcal</span>
+        <span class="macro-pill {% if macros.protein|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍗 {{ macros.protein|smart_int }}g</span>
+        <span class="macro-pill {% if macros.fats|fats_ratio:macros.calories > 0.4  %}bold{% endif %}">🥑 {{ macros.fats|smart_int }}g</span>
+        <span class="macro-pill {% if macros.carbs|macro_ratio:macros.calories > 0.4 %}bold{% endif %}">🍞 {{ macros.carbs|smart_int }}g</span>
+        <span class="macro-pill">🧶 {{ macros.fiber|smart_int }}g</span>
     </div>
 
     {% for ingredient in ingredients %}
