@@ -45,6 +45,8 @@ class IngredientForm(forms.ModelForm):
                 raise forms.ValidationError("Duplicate name detected.")
             except FoodItem.DoesNotExist:
                 pass
+        if not name or len(name) < 3:
+            raise forms.ValidationError(f"Name must be 3 characters or longer")
         return name
 
     def _assert_non_negative(self, field_name):
@@ -88,6 +90,8 @@ class MealForm(forms.ModelForm):
                 raise forms.ValidationError("Duplicate name detected.")
             except FoodItem.DoesNotExist:
                 pass
+        if not name or len(name) < 3:
+            raise forms.ValidationError(f"Name must be 3 characters or longer")
         return name
 
     def clean_makes(self):
