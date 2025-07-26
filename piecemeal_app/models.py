@@ -32,9 +32,14 @@ UNIT_CHOICES = [
         ],
     ),
     (
-        "Count",
+        "Servings",
         [
             ("servings", "servings"),
+        ],
+    ),
+    (
+        "Each",
+        [
             ("each", "each"),
         ],
     ),
