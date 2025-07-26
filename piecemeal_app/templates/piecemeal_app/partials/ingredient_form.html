@@ -1,9 +1,5 @@
 {% load format_extras %}
 {% if not food_item %}
-{% comment %} <div class="form-check form-switch mb-3">
-<input class="form-check-input" type="checkbox" id="toggleFormSwitch" >
-<label class="form-check-label" for="toggleFormSwitch" id="toggleLabel">Add Ingredient</label>
-</div> {% endcomment %}
 <div class="food-item-tab">
 <button id="ingredient-tab-btn">Ingredient</button>
 <button id="meal-tab-btn">Meal</button>
@@ -18,6 +14,7 @@
     <div class="ingredient-controls">
         <input type="number" id="id_quantity" name="quantity" class="{% if form.quantity.errors %} invalid{% endif %}" 
             value="{{ food_item.quantity|smart_float }}" step="0.1" style="width:4em;">
+        
         <select id="id_unit" name="unit" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
             {% for group_label, options in compatible_unit_choices %}
             <optgroup label="{{ group_label }}">
