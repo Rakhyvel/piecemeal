@@ -294,14 +294,13 @@ select {
 }
 
 .ingredient-controls input[type="number"] {
-    width: 3em;
-    min-width: 3em;
     margin-right: 0;
     padding-right: 0;
     border: 1px solid #ccc;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     height: 2.5em;
+    width: 3em !important;
 }
 
 input[type="number"] {
@@ -329,7 +328,7 @@ input[type="number"] {
 
 .ingredient-controls input[type="text"] {
     flex: 1;
-    min-width: 3em;
+    min-width: 4em;
     margin-left: 0;
     border: 1px solid #ccc;
     border-top-left-radius: 0;
@@ -338,7 +337,7 @@ input[type="number"] {
 }
 
 .modal-dialog {
-    max-width: 90vw;
+    max-width: min(720px, 90vw);
     width: 100%;
     margin: 1.75rem auto;
 }
