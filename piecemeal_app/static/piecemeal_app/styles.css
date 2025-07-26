@@ -369,6 +369,34 @@ select {
     border-color: #FFA45B;
 }
 
+.food-item-tab {
+    display: flex;
+    flex-direction: row;
+    gap: 0em;
+    margin-bottom: 1em;
+}
+
+.food-item-tab .selected {
+    background-color: #FFA45B;
+    color: white;
+    border-color: #FFA45B;
+    pointer-events: none;
+}
+
+#ingredient-tab-btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#meal-tab-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.food-item-tab button {
+    width: 100%;
+}
+
 .form-action-buttons {
     display: flex;
     flex-direction: row;

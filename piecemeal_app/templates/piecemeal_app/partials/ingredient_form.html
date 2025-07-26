@@ -1,8 +1,12 @@
 {% load format_extras %}
 {% if not food_item %}
-<div class="form-check form-switch mb-3">
+{% comment %} <div class="form-check form-switch mb-3">
 <input class="form-check-input" type="checkbox" id="toggleFormSwitch" >
 <label class="form-check-label" for="toggleFormSwitch" id="toggleLabel">Add Ingredient</label>
+</div> {% endcomment %}
+<div class="food-item-tab">
+<button id="ingredient-tab-btn">Ingredient</button>
+<button id="meal-tab-btn">Meal</button>
 </div>
 {% endif %}
 <form 

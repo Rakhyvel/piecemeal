@@ -21,7 +21,6 @@ function decodeHTMLEntities(text) {
     return txt.value;
 }
 const csrftoken = getCookie('csrftoken');
-var currentTab = "meal"
 
 // Make it so that all headers have the CSRF token
 $.ajaxSetup({
@@ -91,16 +90,18 @@ $(document).on("click", "#library-tab-btn", function () {
 
 $(document).on("click", "#create-food-item", function () {
     $(".modal-title").text("Add Food Item");
-    $("#toggleFormSwitch").prop("checked", true);
-    $("#toggleLabel").text("Add Ingredient");
-    loadForm("piecemeal/food_item", { is_meal: true });
-    $("#foodItemModal").modal("show");
+    loadForm("piecemeal/food_item", { is_meal: false }, function () {
+        $("#foodItemModal").modal("show");
+        $("#ingredient-tab-btn").addClass("selected");
+        $("#meal-tab-btn").removeClass("selected");
+    });
 });
 
 $(document).on("click", "#create-schedule-entry", () => {
-    loadForm("piecemeal/schedule_entry", {});
-    $(".modal-title").text("Add Schedule Entry");
-    $("#foodItemModal").modal("show");
+    loadForm("piecemeal/schedule_entry", {}, function () {
+        $(".modal-title").text("Add Schedule Entry");
+        $("#foodItemModal").modal("show");
+    });
 });
 
 $(document).on("click", "#show-grocery-list", () => {
@@ -137,19 +138,24 @@ window.addEventListener("scroll", () => {
     lastScroll = currentScroll <= 0 ? 0 : currentScroll
 });
 
-// When user toggles between forms
-$(document).on("change", "#toggleFormSwitch", function () {
-    if ($(this).is(":checked")) {
-        $("#toggleLabel").text("Add Meal");
-        loadForm("piecemeal/food_item", { is_meal: true });
-    } else {
-        $("#toggleLabel").text("Add Ingredient");
-        loadForm("piecemeal/food_item", { is_meal: false });
-    }
+$(document).on("click", "#meal-tab-btn", function () {
+    $("#toggleLabel").text("Add Meal");
+    loadForm("piecemeal/food_item", { is_meal: true }, function () {
+        $("#meal-tab-btn").addClass("selected");
+        $("#ingredient-tab-btn").removeClass("selected");
+    });
+});
+
+$(document).on("click", "#ingredient-tab-btn", function () {
+    $("#toggleLabel").text("Add Ingredient");
+    loadForm("piecemeal/food_item", { is_meal: false }, function () {
+        $("#ingredient-tab-btn").addClass("selected");
+        $("#meal-tab-btn").removeClass("selected");
+    });
 });
 
 // Function to load form via AJAX
-function loadForm(url, data) {
+function loadForm(url, data, after) {
     $("#formContainer").empty();
 
     $.ajax({
@@ -160,6 +166,7 @@ function loadForm(url, data) {
             $("#formContainer").html(data);
             applyAutocompleteTo(".entry-food-name-input");
             applyAutocompleteTo(".ingredient-name");
+            after()
         },
         error: (xhr) => {
             $("#formContainer").html(`${xhr.responseText}`);
