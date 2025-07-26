@@ -27,5 +27,10 @@ urlpatterns = [
         auth_views.LoginView.as_view(template_name="piecemeal_app/login.html"),
         name="login",
     ),
+    path(
+        "piecemeal/login/",
+        auth_views.LoginView.as_view(template_name="piecemeal_app/login.html"),
+        name="login",
+    ),
     path("piecemeal/", include("piecemeal_app.urls")),
 ]
