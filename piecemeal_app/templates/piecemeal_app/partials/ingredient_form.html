@@ -35,41 +35,52 @@
         <label class="form-check-label" for="id_public">Public</label>
     </div>
 
-    <div class="form-group">
-        <label for="id_calories">Calories: </label>
-        <input type="number" id="id_calories" name="calories" value="{{ food_item.calories|smart_float }}" step="0.1" style="width:4em;">
-    </div>
+    <table>
+    <tr class="form-group">
+        <td><label for="id_calories">Calories</label></td>
+        <td><span>🔥</span></td>
+        <td><input type="number" id="id_calories" name="calories" value="{{ food_item.calories|smart_float }}" step="0.1" style="width:4em;"></td>
+        <td><span>kcal</span></td>
+    </tr>
 
-    <div class="form-group">
-        <label for="id_protein">Protein: </label>
-        <input type="number" id="id_protein" name="protein" value="{{ food_item.protein|smart_float }}" step="0.1" style="width:4em;">
-    </div>
+    <tr class="form-group">
+        <td><label for="id_protein">Protein</label></td>
+        <td><span>🍗</span></td>
+        <td><input type="number" id="id_protein" name="protein" value="{{ food_item.protein|smart_float }}" step="0.1" style="width:4em;"></td>
+        <td><span>g</span></td>
+    </tr>
 
-    <div class="form-group">
-        <label for="id_fats">Fats: </label>
-        <input type="number" id="id_fats" name="fats" value="{{ food_item.fats|smart_float }}" step="0.1" style="width:4em;">
-    </div>
+    <tr class="form-group">
+        <td><label for="id_fats">Fats</label></td>
+        <td><span>🥑</span></td>
+        <td><input type="number" id="id_fats" name="fats" value="{{ food_item.fats|smart_float }}" step="0.1" style="width:4em;"></td>
+        <td><span>g</span></td>
+    </tr>
 
-    <div class="form-group">
-        <label for="id_carbs">Carbs: </label>
-        <input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs|smart_float }}" step="0.1" style="width:4em;">
-    </div>
+    <tr class="form-group">
+        <td><label for="id_carbs">Carbs</label></td>
+        <td><span>🍞</span></td>
+        <td><input type="number" id="id_carbs" name="carbs" value="{{ food_item.carbs|smart_float }}" step="0.1" style="width:4em;"></td>
+        <td><span>g</span></td>
+    </tr>
 
-    <div class="form-group">
-        <label for="id_carbs">Fiber: </label>
-        <input type="number" id="id_fiber" name="fiber" value="{{ food_item.fiber|smart_float }}" step="0.1" style="width:4em;">
-    </div>
+    <tr class="form-group">
+        <td><label for="id_carbs">Fiber</label></td>
+        <td><span>🧶</span></td>
+        <td><input type="number" id="id_fiber" name="fiber" value="{{ food_item.fiber|smart_float }}" step="0.1" style="width:4em;"></td>
+        <td><span>g</span></td>
+    </tr>
 
-    <div class="form-group">
-        <label for="id_aisle">Aisle: </label>
-        <select id="id_aisle" name="aisle" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
-            {% for value, label in aisles %}
-            <option value="{{ value }}" {% if food_item.aisle.0 == value %}selected{% endif %}>
-                {{ label }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
+    </table>
+
+    <label for="id_aisle">Aisle </label>
+    <select id="id_aisle" name="aisle" class="form-select unit-select {% if form.unit.errors %} invalid{% endif %}">
+        {% for value, label in aisles %}
+        <option value="{{ value }}" {% if food_item.aisle.0 == value %}selected{% endif %}>
+            {{ label }}
+        </option>
+        {% endfor %}
+    </select>
     
     <div class="form-action-buttons">
         <button type="submit">Save Ingredient</button>
